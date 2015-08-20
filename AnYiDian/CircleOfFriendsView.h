@@ -27,8 +27,7 @@
 
 //人气榜
 - (IBAction)popularityAction:(id)sender;
-//发布
-- (IBAction)publicTopicAction:(id)sender;
+
 - (void)reload:(BOOL)noRefresh;
 
 //清空

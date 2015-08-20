@@ -9,8 +9,14 @@
 #import "ConvenienceTypeView.h"
 #import "LifeReferCell.h"
 #import "ConvenienceTableView.h"
+#import "UIImageView+WebCache.h"
+#import "HotChooseReusableView.h"
+#import "CommDetailView.h"
 
 @interface ConvenienceTypeView ()
+{
+    NSMutableArray *advDatas;
+}
 
 @end
 
@@ -18,21 +24,73 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"便民服务";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"生活服务";
     
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     
-    self.imageDownloadsInProgress = [NSMutableDictionary dictionary];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[LifeReferCell class] forCellWithReuseIdentifier:LifeReferCellIdentifier];
+    [self.collectionView registerClass:[HotChooseReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"HotChooseFooter"];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(lifeServicePush:) name:Notification_LifeServicePush object:nil];
+    
+    [self initFooterHeight];
+    
     [self findShopTypeAll];
+}
+
+- (void)lifeServicePush:(NSNotification *)notic
+{
+    NSInteger row = [[notic.userInfo objectForKey:@"row"] integerValue];
+    ADInfo *adv = (ADInfo *)[advDatas objectAtIndex:row];
+    NSString *adDetailHtm = [NSString stringWithFormat:@"%@%@%@", api_base_url, htm_adDetail ,adv.adId];
+    CommDetailView *detailView = [[CommDetailView alloc] init];
+    detailView.titleStr = @"详情";
+    detailView.urlStr = adDetailHtm;
+    detailView.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:detailView animated:YES];
+}
+
+- (void)initFooterHeight
+{
+    //如果有网络连接
+    if ([UserModel Instance].isNetworkRunning) {
+        //生成获取广告URL
+        UserInfo *userInfo = [[UserModel Instance] getUserInfo];
+        NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+        [param setValue:@"1143917095261700" forKey:@"typeId"];
+        [param setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
+        [param setValue:@"1" forKey:@"timeCon"];
+        NSString *getADDataUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findAdInfoList] params:param];
+        
+        [[AFOSCClient sharedClient]getPath:getADDataUrl parameters:Nil
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       @try {
+                                           advDatas = [Tool readJsonStrToAdinfoArray:operation.responseString];
+                                           NSInteger length = [advDatas count];
+                                           
+                                           //代码控制header和footer的显示
+                                           UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+                                           CGFloat width = [UIScreen mainScreen].bounds.size.width;
+                                           collectionViewLayout.footerReferenceSize = CGSizeMake(width/2, length * 144 + 37);
+                                           
+                                       }
+                                       @catch (NSException *exception) {
+                                           [NdUncaughtExceptionHandler TakeException:exception];
+                                       }
+                                       @finally {
+                                           
+                                       }
+                                   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       if ([UserModel Instance].isNetworkRunning == NO) {
+                                           return;
+                                       }
+                                       if ([UserModel Instance].isNetworkRunning) {
+                                           
+                                       }
+                                   }];
+    }
 }
 
 //取数方法
@@ -113,35 +171,8 @@
         return cell;
     }
     cell.referNameLb.text = type.shopTypeName;
-    
-    //图片显示及缓存
-    if (type.imgData) {
-        cell.referIv.image = type.imgData;
-    }
-    else
-    {
-        if ([type.imgUrlFull isEqualToString:@""]) {
-            type.imgData = [UIImage imageNamed:@"loadingpic2.png"];
-        }
-        else
-        {
-            NSData * imageData = [_iconCache getImage:[TQImageCache parseUrlForCacheName:type.imgUrlFull]];
-            if (imageData) {
-                type.imgData = [UIImage imageWithData:imageData];
-                cell.referIv.image = type.imgData;
-            }
-            else
-            {
-                IconDownloader *downloader = [self.imageDownloadsInProgress objectForKey:[NSString stringWithFormat:@"%d", [indexPath row]]];
-                if (downloader == nil) {
-                    ImgRecord *record = [ImgRecord new];
-                    NSString *urlStr = type.imgUrlFull;
-                    record.url = urlStr;
-                    [self startIconDownload:record forIndexPath:indexPath];
-                }
-            }
-        }
-    }
+    [cell.referIv sd_setImageWithURL:[NSURL URLWithString:type.imgUrlFull] placeholderImage:[UIImage imageNamed:@"default_head.png"]];
+
     return cell;
 }
 
@@ -149,7 +180,14 @@
 //定义每个UICollectionView 的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(79, 90);
+    if(IS_IPHONE_6)
+    {
+        return CGSizeMake(93, 100);
+    }
+    else
+    {
+        return CGSizeMake(79, 90);
+    }
 }
 
 //定义每个UICollectionView 的 margin
@@ -179,56 +217,14 @@
     return YES;
 }
 
-#pragma 下载图片
-- (void)startIconDownload:(ImgRecord *)imgRecord forIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *key = [NSString stringWithFormat:@"%d",[indexPath row]];
-    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:key];
-    if (iconDownloader == nil) {
-        iconDownloader = [[IconDownloader alloc] init];
-        iconDownloader.imgRecord = imgRecord;
-        iconDownloader.index = key;
-        iconDownloader.delegate = self;
-        [self.imageDownloadsInProgress setObject:iconDownloader forKey:key];
-        [iconDownloader startDownload];
-    }
-}
-
-- (void)appImageDidLoad:(NSString *)index
-{
-    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:index];
-    if (iconDownloader)
-    {
-        int _index = [index intValue];
-        if (_index >= [types count]) {
-            return;
-        }
-        ShopType *type = [types objectAtIndex:[index intValue]];
-        if (type) {
-            type.imgData = iconDownloader.imgRecord.img;
-            // cache it
-            NSData * imageData = UIImagePNGRepresentation(type.imgData);
-            [_iconCache putImage:imageData withName:[TQImageCache parseUrlForCacheName:type.imgUrlFull]];
-            [self.collectionView reloadData];
-        }
-    }
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    NSArray *allDownloads = [self.imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    //清空
-    for (ShopType *type in types) {
-        type.imgData = nil;
-    }
 }
 
 - (void)viewDidUnload {
     [self setCollectionView:nil];
     [types removeAllObjects];
-    [self.imageDownloadsInProgress removeAllObjects];
     types = nil;
     _iconCache = nil;
     [super viewDidUnload];
@@ -236,21 +232,27 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    if (self.imageDownloadsInProgress != nil) {
-        NSArray *allDownloads = [self.imageDownloadsInProgress allValues];
-        [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    }
+   
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
     self.navigationItem.backBarButtonItem = backItem;
+}
+
+// 返回headview或footview
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    UICollectionReusableView *reusableview = nil;
+    if (kind == UICollectionElementKindSectionFooter){
+        HotChooseReusableView *footerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"HotChooseFooter" forIndexPath:indexPath];
+        reusableview = footerView;
+    }
+    return reusableview;
 }
 
 /*

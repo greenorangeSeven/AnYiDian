@@ -9,6 +9,7 @@
 #import "ConvenienceDetailView.h"
 #import "BMapKit.h"
 #import "StoreMapPointView.h"
+#import "ShopCommentView.h"
 
 @interface ConvenienceDetailView ()
 {
@@ -23,13 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = self.titleStr;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = self.titleStr;
     
     //适配iOS7uinavigationbar遮挡的问题
     if(IS_IOS7)
@@ -47,6 +42,16 @@
     NSURL *url = [[NSURL alloc]initWithString:self.urlStr];
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
     self.webView.delegate = self;
+    
+    [self.praiseBtn setTitle:[NSString stringWithFormat:@"  赞(%d)", self.shopInfo.heartCount]  forState:UIControlStateNormal];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWebView:) name:Notification_RefreshShopDetailView object:nil];
+}
+
+- (void)refreshWebView:(NSNotification *)notification
+{
+    [Tool showCustomHUD:@"评价成功" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
+    [self.webView reload];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webViewP
@@ -92,7 +97,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
@@ -109,5 +113,60 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (IBAction)praiseAction:(id)sender{
+    self.praiseBtn.enabled = NO;
+//    UserInfo *userInfo = [[UserModel Instance] getUserInfo];
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setValue:self.shopInfo.shopId forKey:@"shopId"];
+//    [param setValue:userInfo.regUserId forKey:@"regUserId"];
+    NSString *addShopHeartCountUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_addShopHeartCount] params:param];
+    [[AFOSCClient sharedClient]getPath:addShopHeartCountUrl parameters:Nil
+                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                   @try {
+                                       NSData *data = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                                       NSError *error;
+                                       NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                       
+                                       NSString *state = [[json objectForKey:@"header"] objectForKey:@"state"];
+                                       NSString *msg = [[json objectForKey:@"header"] objectForKey:@"msg"];
+                                       
+                                       if ([state isEqualToString:@"0000"] == YES)
+                                       {
+//                                           if ([msg isEqualToString:@"点赞成功"]) {
+                                               [Tool showCustomHUD:@"点赞成功" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
+                                               self.shopInfo.heartCount += 1;
+//                                           }
+//                                           else
+//                                           {
+//                                               [Tool showCustomHUD:@"已取消点赞" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
+//                                               self.shopInfo.heartCount-= 1;
+//                                           }
+                                           
+                                       }
+                                       self.praiseBtn.enabled = YES;
+                                       [self.praiseBtn setTitle:[NSString stringWithFormat:@"  赞(%d)", self.shopInfo.heartCount]  forState:UIControlStateNormal];
+                                   }
+                                   @catch (NSException *exception) {
+                                       [NdUncaughtExceptionHandler TakeException:exception];
+                                   }
+                                   @finally {
+                                       
+                                   }
+                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                   if ([UserModel Instance].isNetworkRunning == NO) {
+                                       return;
+                                   }
+                                   if ([UserModel Instance].isNetworkRunning) {
+                                       [Tool ToastNotification:@"错误 网络无连接" andView:self.view andLoading:NO andIsBottom:NO];
+                                   }
+                               }];
+}
+
+- (IBAction)commentAction:(id)sender{
+    ShopCommentView *commentView = [[ShopCommentView alloc] init];
+    commentView.shopId = self.shopInfo.shopId;
+    [self.navigationController pushViewController:commentView animated:YES];
+}
 
 @end

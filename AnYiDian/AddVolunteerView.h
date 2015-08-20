@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AddVolunteerView : UIViewController
+@interface AddVolunteerView : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+{
+    NSMutableArray *volunteers;
+    MBProgressHUD *hud;
+}
+
+@property (weak, nonatomic) UIView *frameView;
+
+@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 
 @end

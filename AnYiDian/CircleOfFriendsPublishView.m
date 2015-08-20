@@ -27,13 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"社区朋友圈";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"发布朋友圈";
     
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle: @"发布" style:UIBarButtonItemStyleBordered target:self action:@selector(submitTopicAction:)];
     self.navigationItem.rightBarButtonItem = rightBtn;
@@ -521,9 +515,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
-    
+        
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";

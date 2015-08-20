@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PreferentialView : UIViewController
+@interface PreferentialView : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+
+@property (strong, nonatomic) IBOutlet UICollectionView *preferentialCollection;
+@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end

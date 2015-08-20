@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Estate : NSObject
+@interface Estate : Jastor
+
+@property (copy, nonatomic) NSString *estateId;
+@property (copy, nonatomic) NSString *estateName;
+@property (copy, nonatomic) NSString *content;
+@property (copy, nonatomic) NSString *imgUrlFull;
 
 @end

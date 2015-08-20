@@ -10,8 +10,6 @@
 #import "Community.h"
 #import "CommodityPropery.h"
 #import "StrikeThroughLabel.h"
-#import "SGFocusImageFrame.h"
-#import "SGFocusImageItem.h"
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "FMDatabaseQueue.h"
@@ -20,13 +18,14 @@
 #import "ShopCarItem.h"
 #import "MWPhotoBrowser.h"
 #import "MyOrderView.h"
+#import "AdView.h"
 
-@interface CommodityDetailView ()<UIWebViewDelegate, SGFocusImageFrameDelegate, MWPhotoBrowserDelegate>
+@interface CommodityDetailView ()<UIWebViewDelegate, MWPhotoBrowserDelegate>
 {
     UserInfo *userInfo;
     Commodity *commodityDetail;
-    SGFocusImageFrame *bannerView;
     NSMutableArray *imageDatas;
+    AdView * adView;
     
     NSMutableArray *properyKeyArray;
     NSMutableArray *properyValArray;
@@ -45,17 +44,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"商品详情";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"商品详情";
     
-    UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 22, 22)];
     [rBtn addTarget:self action:@selector(addShopCarAction:) forControlEvents:UIControlEventTouchUpInside];
-    [rBtn setImage:[UIImage imageNamed:@"shopcar2"] forState:UIControlStateNormal];
+    [rBtn setImage:[UIImage imageNamed:@"shopcar"] forState:UIControlStateNormal];
     UIBarButtonItem *btnTel = [[UIBarButtonItem alloc]initWithCustomView:rBtn];
     self.navigationItem.rightBarButtonItem = btnTel;
     
@@ -93,7 +86,7 @@
     //生成获取商品信息URL
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setValue:self.commodityId forKey:@"commodityId"];
-//    [param setValue:userInfo.regUserId forKey:@"regUserId"];
+    [param setValue:userInfo.regUserId forKey:@"regUserId"];
     
     NSString *findCommodityInfoByIdUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findCommodityInfoById] params:param];
     [[AFOSCClient sharedClient]getPath:findCommodityInfoByIdUrl parameters:Nil
@@ -134,76 +127,62 @@
     [self.marketPriceLb addSubview:slabel];
     
     if (commodityDetail.isCollection == 0) {
-        [self.collectionBtn setImage:[UIImage imageNamed:@"star_nor"] forState:UIControlStateNormal];
-        self.collectionLb.text = @"收藏";
-        self.collectionLb.textColor = [UIColor blackColor];
+//        [self.collectionBtn setImage:[UIImage imageNamed:@"star_nor"] forState:UIControlStateNormal];
+        self.collectionLb.text = @"关注";
+//        self.collectionLb.textColor = [UIColor blackColor];
     }
     else
     {
-        [self.collectionBtn setImage:[UIImage imageNamed:@"star_pro"] forState:UIControlStateNormal];
-        self.collectionLb.text = @"已收藏";
-        self.collectionLb.textColor = [Tool getColorForMain];
+//        [self.collectionBtn setImage:[UIImage imageNamed:@"star_pro"] forState:UIControlStateNormal];
+        self.collectionLb.text = @"已关注";
+//        self.collectionLb.textColor = [Tool getColorForMain];
     }
 }
 
 - (void)initShopImage
 {
     imageDatas = commodityDetail.imgStrList;
-    int length = [imageDatas count];
     
-    NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:length+2];
-    if (length > 1)
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    
+    //如果你的这个广告视图是添加到导航控制器子控制器的View上,请添加此句,否则可忽略此句
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    adView = [AdView adScrollViewWithFrame:CGRectMake(0, 0, width, 150)  \
+                              imageLinkURL:imageDatas\
+                       placeHoderImageName:@"placeHoder.jpg" \
+                      pageControlShowStyle:UIPageControlShowStyleCenter];
+    
+    //    是否需要支持定时循环滚动，默认为YES
+    //    adView.isNeedCycleRoll = YES;
+    
+    [adView setAdTitleArray:nil withShowStyle:AdTitleShowStyleNone];
+    //    设置图片滚动时间,默认3s
+    //    adView.adMoveTime = 2.0;
+    
+    //图片被点击后回调的方法
+    adView.callBack = ^(NSInteger index,NSString * imageURL)
     {
-        NSString *imageStr = [imageDatas objectAtIndex:length-1];
-        SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:imageStr tag:length-1];
-        [itemArray addObject:item];
-    }
-    for (int i = 0; i < length; i++)
-    {
-        NSString *imageStr = [imageDatas objectAtIndex:i];
-        SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:imageStr tag:i];
-        [itemArray addObject:item];
-        
-    }
-    //添加第一张图 用于循环
-    if (length >1)
-    {
-        NSString *imageStr = [imageDatas objectAtIndex:0];
-        SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:imageStr tag:0];
-        [itemArray addObject:item];
-    }
-    bannerView = [[SGFocusImageFrame alloc] initWithFrame:CGRectMake(0, 0, 320, 150) delegate:self imageItems:itemArray isAuto:YES];
-    [bannerView scrollToIndex:0];
-    [self.shopImageIv addSubview:bannerView];
-}
-
-//顶部图片滑动点击委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame didSelectItem:(SGFocusImageItem *)item
-{
-    if ([self.photos count] == 0) {
-        NSMutableArray *photos = [[NSMutableArray alloc] init];
-        for (NSString *d in imageDatas) {
-            MWPhoto * photo = [MWPhoto photoWithURL:[NSURL URLWithString:d]];
-            [photos addObject:photo];
+        if ([self.photos count] == 0) {
+            NSMutableArray *photos = [[NSMutableArray alloc] init];
+            for (NSString *d in imageDatas) {
+                MWPhoto * photo = [MWPhoto photoWithURL:[NSURL URLWithString:d]];
+                [photos addObject:photo];
+            }
+            self.photos = photos;
         }
-        self.photos = photos;
-    }
-    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-    browser.displayActionButton = YES;
-    browser.displayNavArrows = NO;//左右分页切换,默认否
-    browser.displaySelectionButtons = NO;//是否显示选择按钮在图片上,默认否
-    browser.alwaysShowControls = YES;//控制条件控件 是否显示,默认否
-    browser.zoomPhotosToFill = NO;//是否全屏,默认是
-    //    browser.wantsFullScreenLayout = YES;//是否全屏
-    [browser setCurrentPhotoIndex:advIndex];
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationController pushViewController:browser animated:YES];
-}
-
-//顶部图片自动滑动委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame currentItem:(int)index;
-{
-    advIndex = index;
+        MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+        browser.displayActionButton = YES;
+        browser.displayNavArrows = NO;//左右分页切换,默认否
+        browser.displaySelectionButtons = NO;//是否显示选择按钮在图片上,默认否
+        browser.alwaysShowControls = YES;//控制条件控件 是否显示,默认否
+        browser.zoomPhotosToFill = NO;//是否全屏,默认是
+        //    browser.wantsFullScreenLayout = YES;//是否全屏
+        [browser setCurrentPhotoIndex:advIndex];
+        self.navigationController.navigationBar.hidden = NO;
+        [self.navigationController pushViewController:browser animated:YES];
+    };
+    [self.shopImageIv addSubview:adView];
 }
 
 //MWPhotoBrowserDelegate委托事件
@@ -349,8 +328,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    bannerView.delegate = self;
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
@@ -361,7 +338,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    bannerView.delegate = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -444,10 +420,10 @@
                                        else
                                        {
                                            commodityDetail.isCollection = 1;
-                                           [self.collectionBtn setImage:[UIImage imageNamed:@"star_pro"] forState:UIControlStateNormal];
-                                           self.collectionLb.text = @"已收藏";
-                                           self.collectionLb.textColor = [Tool getColorForMain];
-                                           [Tool showCustomHUD:@"已收藏" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
+//                                           [self.collectionBtn setImage:[UIImage imageNamed:@"star_pro"] forState:UIControlStateNormal];
+                                           self.collectionLb.text = @"已关注";
+//                                           self.collectionLb.textColor = [Tool getColorForMain];
+                                           [Tool showCustomHUD:@"已关注" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
                                        }
                                        self.collectionBtn.enabled = YES;
                                    }
@@ -495,10 +471,10 @@
                                        else
                                        {
                                            commodityDetail.isCollection = 0;
-                                           [self.collectionBtn setImage:[UIImage imageNamed:@"star_nor"] forState:UIControlStateNormal];
-                                           self.collectionLb.text = @"收藏";
-                                           self.collectionLb.textColor = [UIColor blackColor];
-                                           [Tool showCustomHUD:@"取消收藏" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
+//                                           [self.collectionBtn setImage:[UIImage imageNamed:@"star_nor"] forState:UIControlStateNormal];
+                                           self.collectionLb.text = @"关注";
+//                                           self.collectionLb.textColor = [UIColor blackColor];
+                                           [Tool showCustomHUD:@"取消关注" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
                                        }
                                        self.collectionBtn.enabled = YES;
                                    }

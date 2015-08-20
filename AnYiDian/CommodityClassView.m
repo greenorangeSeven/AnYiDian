@@ -12,7 +12,6 @@
 #import "UIImageView+WebCache.h"
 #import "CommDetailView.h"
 #import "CommodityView.h"
-#import "ActivityDetailView.h"
 #import "CommodityDetailView.h"
 
 @interface CommodityClassView ()
@@ -24,13 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"小区快送";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"生活超市";
     
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -49,7 +42,7 @@
     
     [self refreshExpressData];
     
-    [self getADVData];
+//    [self getADVData];
 }
 
 - (void)refreshExpressData
@@ -145,7 +138,10 @@
 //定义每个UICollectionView 的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if(IS_IPHONE_6)
+    {
+        return CGSizeMake(750/6-1, 750/6);
+    }
     return CGSizeMake(106, 106);
     
 }
@@ -259,96 +255,94 @@
 //    return reusableview;
 //}
 
-- (void)getADVData
-{
-    //如果有网络连接
-    if ([UserModel Instance].isNetworkRunning) {
-        
-        UserInfo *userInfo = [[UserModel Instance] getUserInfo];
-        //生成获取广告URL
-        NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
-        [param setValue:@"1142357056821000" forKey:@"typeId"];
-        [param setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
-        [param setValue:@"1" forKey:@"timeCon"];
-        NSString *getADDataUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findAdInfoList] params:param];
-        
-        [[AFOSCClient sharedClient]getPath:getADDataUrl parameters:Nil
-                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                       @try {
-                                           advDatas = [Tool readJsonStrToAdinfoArray:operation.responseString];
-                                           int length = [advDatas count];
-                                           
-                                           NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:length+2];
-                                           if (length > 1)
-                                           {
-                                               ADInfo *adv = [advDatas objectAtIndex:length-1];
-                                               
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:length-1];
-                                               [itemArray addObject:item];
-                                           }
-                                           for (int i = 0; i < length; i++)
-                                           {
-                                               ADInfo *adv = [advDatas objectAtIndex:i];
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:i];
-                                               [itemArray addObject:item];
-                                               
-                                           }
-                                           //添加第一张图 用于循环
-                                           if (length >1)
-                                           {
-                                               ADInfo *adv = [advDatas objectAtIndex:0];
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:0];
-                                               [itemArray addObject:item];
-                                           }
-                                           bannerView = [[SGFocusImageFrame alloc] initWithFrame:CGRectMake(0, 0, 320, 135) delegate:self imageItems:itemArray isAuto:YES];
-                                           [bannerView scrollToIndex:0];
-                                           [self.advIv addSubview:bannerView];
-                                       }
-                                       @catch (NSException *exception) {
-                                           [NdUncaughtExceptionHandler TakeException:exception];
-                                       }
-                                       @finally {
-                                           
-                                       }
-                                   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                       if ([UserModel Instance].isNetworkRunning == NO) {
-                                           return;
-                                       }
-                                       if ([UserModel Instance].isNetworkRunning) {
-                                           [Tool showCustomHUD:@"网络不给力" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
-                                       }
-                                   }];
-    }
-}
-
-//顶部图片滑动点击委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame didSelectItem:(SGFocusImageItem *)item
-{
-    ADInfo *adv = (ADInfo *)[advDatas objectAtIndex:advIndex];
-    if (adv)
-    {
-        NSString *adDetailHtm = [NSString stringWithFormat:@"%@%@%@", api_base_url, htm_adDetail ,adv.adId];
-        CommDetailView *detailView = [[CommDetailView alloc] init];
-        detailView.titleStr = @"详情";
-        detailView.urlStr = adDetailHtm;
-        detailView.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:detailView animated:YES];
-    }
-}
-
-//顶部图片自动滑动委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame currentItem:(int)index;
-{
-    advIndex = index;
-}
+//- (void)getADVData
+//{
+//    //如果有网络连接
+//    if ([UserModel Instance].isNetworkRunning) {
+//        
+//        UserInfo *userInfo = [[UserModel Instance] getUserInfo];
+//        //生成获取广告URL
+//        NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+//        [param setValue:@"1142357056821000" forKey:@"typeId"];
+//        [param setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
+//        [param setValue:@"1" forKey:@"timeCon"];
+//        NSString *getADDataUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findAdInfoList] params:param];
+//        
+//        [[AFOSCClient sharedClient]getPath:getADDataUrl parameters:Nil
+//                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//                                       @try {
+//                                           advDatas = [Tool readJsonStrToAdinfoArray:operation.responseString];
+//                                           int length = [advDatas count];
+//                                           
+//                                           NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:length+2];
+//                                           if (length > 1)
+//                                           {
+//                                               ADInfo *adv = [advDatas objectAtIndex:length-1];
+//                                               
+//                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:length-1];
+//                                               [itemArray addObject:item];
+//                                           }
+//                                           for (int i = 0; i < length; i++)
+//                                           {
+//                                               ADInfo *adv = [advDatas objectAtIndex:i];
+//                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:i];
+//                                               [itemArray addObject:item];
+//                                               
+//                                           }
+//                                           //添加第一张图 用于循环
+//                                           if (length >1)
+//                                           {
+//                                               ADInfo *adv = [advDatas objectAtIndex:0];
+//                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:0];
+//                                               [itemArray addObject:item];
+//                                           }
+//                                           bannerView = [[SGFocusImageFrame alloc] initWithFrame:CGRectMake(0, 0, 320, 135) delegate:self imageItems:itemArray isAuto:YES];
+//                                           [bannerView scrollToIndex:0];
+//                                           [self.advIv addSubview:bannerView];
+//                                       }
+//                                       @catch (NSException *exception) {
+//                                           [NdUncaughtExceptionHandler TakeException:exception];
+//                                       }
+//                                       @finally {
+//                                           
+//                                       }
+//                                   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//                                       if ([UserModel Instance].isNetworkRunning == NO) {
+//                                           return;
+//                                       }
+//                                       if ([UserModel Instance].isNetworkRunning) {
+//                                           [Tool showCustomHUD:@"网络不给力" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
+//                                       }
+//                                   }];
+//    }
+//}
+//
+////顶部图片滑动点击委托协议实现事件
+//- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame didSelectItem:(SGFocusImageItem *)item
+//{
+//    ADInfo *adv = (ADInfo *)[advDatas objectAtIndex:advIndex];
+//    if (adv)
+//    {
+//        NSString *adDetailHtm = [NSString stringWithFormat:@"%@%@%@", api_base_url, htm_adDetail ,adv.adId];
+//        CommDetailView *detailView = [[CommDetailView alloc] init];
+//        detailView.titleStr = @"详情";
+//        detailView.urlStr = adDetailHtm;
+//        detailView.hidesBottomBarWhenPushed = YES;
+//        [self.navigationController pushViewController:detailView animated:YES];
+//    }
+//}
+//
+////顶部图片自动滑动委托协议实现事件
+//- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame currentItem:(int)index;
+//{
+//    advIndex = index;
+//}
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    bannerView.delegate = self;
-
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
@@ -358,7 +352,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    bannerView.delegate = nil;
 }
 
 /*

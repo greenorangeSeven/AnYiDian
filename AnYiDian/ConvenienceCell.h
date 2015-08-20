@@ -13,7 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *shopNameLb;
 @property (weak, nonatomic) IBOutlet UILabel *shopAddressLb;
 @property (weak, nonatomic) IBOutlet UILabel *shopPhoneLb;
-@property (weak, nonatomic) IBOutlet UIView *distanceView;
-@property (weak, nonatomic) IBOutlet UILabel *distanceLb;
+@property (weak, nonatomic) IBOutlet UIImageView *imageIv;
+@property (weak, nonatomic) IBOutlet UIButton *locationBtn;
 
 @end

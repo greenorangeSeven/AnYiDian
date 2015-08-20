@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RegUserInfo : NSObject
+@interface RegUserInfo : Jastor
+
+@property (copy, nonatomic) NSString *regUserId;
+@property (copy, nonatomic) NSString *regUserName;
+@property (copy, nonatomic) NSString *mobileNo;
+@property (copy, nonatomic) NSString *nickName;
+@property int isVolunteer;
+@property (copy, nonatomic) NSString *photoFull;
 
 @end

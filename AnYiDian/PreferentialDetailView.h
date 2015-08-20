@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Activity.h"
 
-@interface PreferentialDetailView : UIViewController
+@interface PreferentialDetailView : UIViewController<UIWebViewDelegate>
+
+@property (copy, nonatomic) Activity *activity;
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (weak, nonatomic) IBOutlet UIButton *attendBtn;
+@property (weak, nonatomic) IBOutlet UIButton *praiseBtn;
+
+- (IBAction)praiseAction:(id)sender;
+- (IBAction)attendAction:(id)sender;
 
 @end

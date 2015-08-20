@@ -30,19 +30,15 @@
     
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.view.frame.size.height);
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"注册";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"注册";
     
     UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 21, 22)];
     [rBtn addTarget:self action:@selector(telAction:) forControlEvents:UIControlEventTouchUpInside];
     [rBtn setImage:[UIImage imageNamed:@"head_tel"] forState:UIControlStateNormal];
     UIBarButtonItem *btnTel = [[UIBarButtonItem alloc]initWithCustomView:rBtn];
     self.navigationItem.rightBarButtonItem = btnTel;
+    
+    [self.nextStepBtn.layer  setCornerRadius:5.0f];
     
     self.identityNameArray = @[@"业主", @"业主家属", @"租户"];
     self.identityIdArray = @[@"0", @"1", @"2"];

@@ -26,4 +26,6 @@
 @property (nonatomic, retain) NSArray *properyList;
 @property (nonatomic, retain) NSMutableArray *properyStrList;
 
+@property int integral;
+
 @end

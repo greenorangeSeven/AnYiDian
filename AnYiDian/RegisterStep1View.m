@@ -47,19 +47,16 @@
     
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.view.frame.size.height);
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"注册";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"注册";
     
     UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 21, 22)];
     [rBtn addTarget:self action:@selector(telAction:) forControlEvents:UIControlEventTouchUpInside];
     [rBtn setImage:[UIImage imageNamed:@"head_tel"] forState:UIControlStateNormal];
     UIBarButtonItem *btnTel = [[UIBarButtonItem alloc]initWithCustomView:rBtn];
     self.navigationItem.rightBarButtonItem = btnTel;
+    
+    [self.nextStepBtn.layer  setCornerRadius:5.0f];
+    [self.inviteRegisterBtn.layer  setCornerRadius:5.0f];
     
     self.fieldArray = @[self.cityTf, self.communityTf, self.buildingTf, self.unitTf, self.houseNumTf];
     
@@ -362,7 +359,7 @@
     {
         City *city = (City *)[self.cityArray objectAtIndex:self.pickerSelectRow];
         self.cityTf.text = city.cityName;
-        [self getCommunityArrayData:[city.cityId stringValue]];
+        [self getCommunityArrayData:city.cityId];
 
     }
     else if (sender.tag == 2)
@@ -453,8 +450,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];  
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],UITextAttributeTextColor,nil]];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
@@ -494,7 +492,6 @@
         [Tool showCustomHUD:@"请正确选择您的住址" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
         return;
     }
-    NSLog(houseNumId);
     RegisterStep2View *register2 = [[RegisterStep2View alloc] init];
     register2.houseNumId = houseNumId;
     [self.navigationController pushViewController:register2 animated:YES];

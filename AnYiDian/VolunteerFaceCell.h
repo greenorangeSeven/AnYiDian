@@ -10,4 +10,10 @@
 
 @interface VolunteerFaceCell : UICollectionViewCell
 
+@property (weak, nonatomic) IBOutlet UILabel *faceBg1View;
+@property (weak, nonatomic) IBOutlet UILabel *faceBg2View;
+@property (weak, nonatomic) IBOutlet UIImageView *faceIv;
+
+@property (weak, nonatomic) IBOutlet UILabel *userNameLb;
+
 @end

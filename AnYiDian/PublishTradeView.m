@@ -24,18 +24,18 @@
     [super viewDidLoad];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.view.frame.size.height);
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"交易买卖";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
-    
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle: @"发布" style:UIBarButtonItemStyleBordered target:self action:@selector(publishAction:)];
     self.navigationItem.rightBarButtonItem = rightBtn;
     
     userInfo = [[UserModel Instance] getUserInfo];
+    
+    if ([self.typeId isEqualToString:@"1"]) {
+        self.priceLb.text = @"价格(单位:万元):";
+    }
+    else if ([self.typeId isEqualToString:@"2"])
+    {
+        self.priceLb.text = @"价格(单位:元/月):";
+    }
     
     self.phoneTf.text = userInfo.mobileNo;
     self.contentTv.delegate = self;
@@ -43,7 +43,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    int textLength = [textView.text length];
+    NSInteger textLength = [textView.text length];
     if (textLength == 0) {
         [self.contentPlaceholder setHidden:NO];
     }else{
@@ -55,6 +55,7 @@
 {
     NSString *titleStr = self.titleTf.text;
     NSString *priceStr = self.priceTf.text;
+    NSString *areaStr = self.areaTf.text;
     NSString *contentStr = self.contentTv.text;
     NSString *phoneStr = self.phoneTf.text;
     if (titleStr == nil || [titleStr length] == 0) {
@@ -65,12 +66,21 @@
         [Tool showCustomHUD:@"请输入价格" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
         return;
     }
+    if (areaStr == nil || [areaStr length] == 0) {
+        [Tool showCustomHUD:@"请输入房屋面积" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
+        return;
+    }
     if (contentStr == nil || [contentStr length] == 0) {
         [Tool showCustomHUD:@"请输入描述" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
         return;
     }
     if (![phoneStr isValidPhoneNum]) {
         [Tool showCustomHUD:@"手机号错误" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
+        return;
+    }
+    if (self.cameraImage == nil)
+    {
+        [Tool showCustomHUD:@"请上传照片" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
         return;
     }
     self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -80,8 +90,16 @@
     [param setValue:contentStr forKey:@"content"];
     [param setValue:phoneStr forKey:@"phone"];
     [param setValue:priceStr forKey:@"price"];
+    [param setValue:areaStr forKey:@"area"];
+    if ([self.typeId isEqualToString:@"1"]) {
+        [param setValue:@"1" forKey:@"priceUnit"];
+    }
+    else if ([self.typeId isEqualToString:@"2"])
+    {
+        [param setValue:@"0" forKey:@"priceUnit"];
+    }
     [param setValue:userInfo.regUserId forKey:@"userId"];
-    [param setValue:@"0" forKey:@"typeId"];
+    [param setValue:self.typeId forKey:@"typeId"];
     NSString *addBusinessSign = [Tool serializeSign:[NSString stringWithFormat:@"%@%@", api_base_url, api_addBusinessInfoForApp] params:param];
     
     NSString *addBusinessUrl = [NSString stringWithFormat:@"%@%@", api_base_url, api_addBusinessInfoForApp];
@@ -95,8 +113,16 @@
     [request setPostValue:contentStr forKey:@"content"];
     [request setPostValue:phoneStr forKey:@"phone"];
     [request setPostValue:priceStr forKey:@"price"];
+    [request setPostValue:areaStr forKey:@"area"];
+    if ([self.typeId isEqualToString:@"1"]) {
+        [request setPostValue:@"1" forKey:@"priceUnit"];
+    }
+    else if ([self.typeId isEqualToString:@"2"])
+    {
+        [request setPostValue:@"0" forKey:@"priceUnit"];
+    }
     [request setPostValue:userInfo.regUserId forKey:@"userId"];
-    [request setPostValue:@"0" forKey:@"typeId"];
+    [request setPostValue:self.typeId forKey:@"typeId"];
     if (self.cameraImage != nil) {
         [request addData:UIImageJPEGRepresentation(self.cameraImage, 0.8f) withFileName:@"img.jpg" andContentType:@"image/jpeg" forKey:@"pic"];
     }
@@ -145,9 +171,8 @@
     }
     else
     {
-        [Tool showCustomHUD:@"已发布，请等待审核" andView:self.parentView  andImage:@"37x-Failure.png" andAfterDelay:1];
+        [Tool showCustomHUD:@"已发布，请等待审核" andView:self.parentView  andImage:@"37x-Failure.png" andAfterDelay:2];
         [self.navigationController popViewControllerAnimated:YES];
-        
     }
 }
 

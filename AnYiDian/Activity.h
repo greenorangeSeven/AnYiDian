@@ -19,8 +19,11 @@
 @property (nonatomic, retain) NSString *endtime;
 @property (nonatomic, retain) NSString *qualifications;
 @property int heartCount;
+@property int heartCountNew;
 @property (nonatomic, retain) NSString *imgUrlFull;
+@property (nonatomic, retain) NSString *content;
 
+@property (nonatomic, retain) NSString *isHeart;
 @property (nonatomic, retain) NSString *isJoin;
 @property (nonatomic, retain) NSNumber *starttimeStamp;
 @property (nonatomic, retain) NSNumber *endtimeStamp;

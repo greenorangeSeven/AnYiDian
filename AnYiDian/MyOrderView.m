@@ -25,13 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"我的订单";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"我的订单";
     
     if (self.fromBuy) {
         UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle: @"返回" style:UIBarButtonItemStyleBordered target:self action:@selector(backAction)];
@@ -347,7 +341,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
@@ -357,11 +351,11 @@
 
 - (IBAction)item1Action:(id)sender {
     [self.item1Btn setTitleColor:[Tool getColorForMain] forState:UIControlStateNormal];
-    [self.item1Btn setBackgroundImage:[UIImage imageNamed:@"activity_tab_bg"] forState:UIControlStateNormal];
+//    [self.item1Btn setBackgroundImage:[UIImage imageNamed:@"activity_tab_bg"] forState:UIControlStateNormal];
     [self.item2Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.item2Btn setBackgroundImage:nil forState:UIControlStateNormal];
+//    [self.item2Btn setBackgroundImage:nil forState:UIControlStateNormal];
     [self.item3btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.item3btn setBackgroundImage:nil forState:UIControlStateNormal];
+//    [self.item3btn setBackgroundImage:nil forState:UIControlStateNormal];
     stateId = @"";
     isLoadOver = NO;
     [self reload:NO];
@@ -369,11 +363,11 @@
 
 - (IBAction)item2Action:(id)sender {
     [self.item1Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.item1Btn setBackgroundImage:nil forState:UIControlStateNormal];
+//    [self.item1Btn setBackgroundImage:nil forState:UIControlStateNormal];
     [self.item2Btn setTitleColor:[Tool getColorForMain] forState:UIControlStateNormal];
-    [self.item2Btn setBackgroundImage:[UIImage imageNamed:@"activity_tab_bg"] forState:UIControlStateNormal];
+//    [self.item2Btn setBackgroundImage:[UIImage imageNamed:@"activity_tab_bg"] forState:UIControlStateNormal];
     [self.item3btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.item3btn setBackgroundImage:nil forState:UIControlStateNormal];
+//    [self.item3btn setBackgroundImage:nil forState:UIControlStateNormal];
     stateId = @"0";
     isLoadOver = NO;
     [self reload:NO];
@@ -381,11 +375,11 @@
 
 - (IBAction)item3Action:(id)sender {
     [self.item1Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.item1Btn setBackgroundImage:nil forState:UIControlStateNormal];
+//    [self.item1Btn setBackgroundImage:nil forState:UIControlStateNormal];
     [self.item2Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.item2Btn setBackgroundImage:nil forState:UIControlStateNormal];
+//    [self.item2Btn setBackgroundImage:nil forState:UIControlStateNormal];
     [self.item3btn setTitleColor:[Tool getColorForMain] forState:UIControlStateNormal];
-    [self.item3btn setBackgroundImage:[UIImage imageNamed:@"activity_tab_bg"] forState:UIControlStateNormal];
+//    [self.item3btn setBackgroundImage:[UIImage imageNamed:@"activity_tab_bg"] forState:UIControlStateNormal];
     stateId = @"1,2,3";
     isLoadOver = NO;
     [self reload:NO];
@@ -402,6 +396,7 @@
     [request setUseCookiePersistence:NO];
     [request setTimeOutSeconds:30];
     [request setPostValue:order.orderId forKey:@"orderId"];
+    [request setPostValue:@"1" forKey:@"payType"];
     [request setDelegate:self];
     [request setDidFailSelector:@selector(requestFailed:)];
     [request setDidFinishSelector:@selector(requestCreate:)];
@@ -445,7 +440,7 @@
     else
     {
         NSString *orderStr = [json objectForKey:@"msg"];
-        [[AlipaySDK defaultService] payOrder:orderStr fromScheme:@"ZLYSAlipay" callback:^(NSDictionary *resultDic)
+        [[AlipaySDK defaultService] payOrder:orderStr fromScheme:@"AnYiDianAlipay" callback:^(NSDictionary *resultDic)
          {
              NSString *resultState = resultDic[@"resultStatus"];
              if([resultState isEqualToString:ORDER_PAY_OK])

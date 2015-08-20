@@ -64,6 +64,7 @@
 #import "MyOrder.h"
 #import "MyOrderCommodity.h"
 #import "MyServiceOrder.h"
+#import "Integral.h"
 
 #import "Jastor.h"
 
@@ -156,6 +157,9 @@
 
 + (NSString* )databasePath;
 
+//过滤HTML标签
++ (NSString *)flattenHTML:(NSString *)html;
+
 //平台接口生成验签
 + (NSDictionary *)parseQueryString:(NSString *)query;
 + (NSString *)serializeURL:(NSString *)baseURL params:(NSDictionary *)params;
@@ -163,6 +167,8 @@
 + (NSString *)serializeUFT8Sign:(NSString *)baseURL params:(NSDictionary *)params;
 //平台接口生成验签Sign中文
 + (NSString *)serializeSign:(NSString *)baseURL params:(NSDictionary *)params;
+
++ (void)gotoTabbar:(UIWindow *)window;
 
 //解析登陆JSON
 + (UserInfo *)readJsonStrToLoginUserInfo:(NSString *)str;
@@ -216,10 +222,14 @@
 + (NSMutableArray *)readJsonStrToActivityArray:(NSString *)str;
 //解析账单列表列表JSON
 + (NSMutableArray *)readJsonStrToPaymentArray:(NSString *)str;
+//解析贵州账单列表JSON
++ (NSMutableArray *)readJsonStrToGuizhouBillArray:(NSString *)str;
 //解析月账单明细JSON
 + (NSMutableArray *)readJsonStrToPaymentItemArray:(NSString *)str;
 //解析交易买卖JSON
 + (NSMutableArray *)readJsonStrToTradeArray:(NSString *)str;
+//解析交易买卖JSON
++ (NSMutableArray *)readJsonStrToTradeTopArray:(NSString *)str;
 //解析房间所绑定的用户JSON
 + (NSMutableArray *)readJsonStrToHouseUserArray:(NSString *)str;
 //解析账单列表JSON
@@ -234,6 +244,7 @@
 + (NSMutableArray *)readJsonStrToOrderArray:(NSString *)str;
 //解析我的服务预约JSON
 + (NSMutableArray *)readJsonStrToMyServiceOrderArray:(NSString *)str;
++ (NSMutableArray *)readJsonStrToIntegralArray:(NSString *)str;
 
 //将订单对象转换成json
 + (NSString *)readOderSubmitVOToJson:(OderSubmitVO *)submit;

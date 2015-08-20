@@ -19,13 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"个人资料修改";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"修改密码";
     
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle: @"修改" style:UIBarButtonItemStyleBordered target:self action:@selector(modifyAction:)];
     self.navigationItem.rightBarButtonItem = rightBtn;

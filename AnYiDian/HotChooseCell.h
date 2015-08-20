@@ -10,4 +10,8 @@
 
 @interface HotChooseCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UIImageView *imageIv;
+@property (weak, nonatomic) IBOutlet UILabel *titleLb;
+@property (weak, nonatomic) IBOutlet UIView *bgView;
+
 @end

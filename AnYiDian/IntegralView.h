@@ -22,10 +22,11 @@
     UIWebView *phoneWebView;
 }
 
-@property (weak, nonatomic) UIView *frameView;
-
+@property (copy, nonatomic) NSString *integral;
 @property (weak, nonatomic) IBOutlet UILabel *totalLb;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *exchangeBtn;
+- (IBAction)exchangeAction:(id)sender;
 
 - (void)refreshIntegralData;
 

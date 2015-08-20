@@ -11,10 +11,13 @@
 #import "CallServiceCell.h"
 #import "CallServiceReusable.h"
 #import "CommDetailView.h"
+#import "UIImageView+WebCache.h"
+#import "AdView.h"
 
 @interface CallServiceView ()
 {
     UIWebView *phoneWebView;
+    AdView * adView;
 }
 
 @end
@@ -24,20 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //适配iOS7uinavigationbar遮挡的问题
-    if(IS_IOS7)
-    {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }
-    
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"物业呼叫";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"物业呼叫";
     
     UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 21, 22)];
     [rBtn addTarget:self action:@selector(telAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -47,7 +37,6 @@
     
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     
-    self.imageDownloadsInProgress = [NSMutableDictionary dictionary];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[CallServiceCell class] forCellWithReuseIdentifier:CallServiceCellIdentifier];
@@ -130,35 +119,8 @@
     [Tool roundTextView:cell.boxView andBorderWidth:0.5 andCornerRadius:5.0];
     cell.serviceNameLb.text = service.departmentName;
     cell.servicePhoneLb.text = service.departmentPhone;
+    [cell.servicePicIv sd_setImageWithURL:[NSURL URLWithString:service.departmentImgFull] placeholderImage:[UIImage imageNamed:@"placeHoder"]];
     
-    //图片显示及缓存
-    if (service.imgData) {
-        cell.servicePicIv.image = service.imgData;
-    }
-    else
-    {
-        if ([service.departmentImgFull isEqualToString:@""]) {
-            service.imgData = [UIImage imageNamed:@"loadingpic2.png"];
-        }
-        else
-        {
-            NSData * imageData = [_iconCache getImage:[TQImageCache parseUrlForCacheName:service.departmentImgFull]];
-            if (imageData) {
-                service.imgData = [UIImage imageWithData:imageData];
-                cell.servicePicIv.image = service.imgData;
-            }
-            else
-            {
-                IconDownloader *downloader = [self.imageDownloadsInProgress objectForKey:[NSString stringWithFormat:@"%d", [indexPath row]]];
-                if (downloader == nil) {
-                    ImgRecord *record = [ImgRecord new];
-                    NSString *urlStr = service.departmentImgFull;
-                    record.url = urlStr;
-                    [self startIconDownload:record forIndexPath:indexPath];
-                }
-            }
-        }
-    }
     return cell;
 }
 
@@ -166,7 +128,14 @@
 //定义每个UICollectionView 的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(155, 145);
+    if(IS_IPHONE_6)
+    {
+        return CGSizeMake(180, 170);
+    }
+    else
+    {
+        return CGSizeMake(155, 145);
+    }
 }
 
 //定义每个UICollectionView 的 margin
@@ -195,47 +164,9 @@
     return YES;
 }
 
-#pragma 下载图片
-- (void)startIconDownload:(ImgRecord *)imgRecord forIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *key = [NSString stringWithFormat:@"%d",[indexPath row]];
-    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:key];
-    if (iconDownloader == nil) {
-        iconDownloader = [[IconDownloader alloc] init];
-        iconDownloader.imgRecord = imgRecord;
-        iconDownloader.index = key;
-        iconDownloader.delegate = self;
-        [self.imageDownloadsInProgress setObject:iconDownloader forKey:key];
-        [iconDownloader startDownload];
-    }
-}
-
-- (void)appImageDidLoad:(NSString *)index
-{
-    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:index];
-    if (iconDownloader)
-    {
-        int _index = [index intValue];
-        if (_index >= [services count]) {
-            return;
-        }
-        CallService *service = [services objectAtIndex:[index intValue]];
-        if (service) {
-            service.imgData = iconDownloader.imgRecord.img;
-            // cache it
-            NSData * imageData = UIImagePNGRepresentation(service.imgData);
-            [_iconCache putImage:imageData withName:[TQImageCache parseUrlForCacheName:service.departmentImgFull]];
-            [self.collectionView reloadData];
-        }
-    }
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    NSArray *allDownloads = [self.imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    //清空
     for (CallService *service in services) {
         service.imgData = nil;
     }
@@ -244,18 +175,13 @@
 - (void)viewDidUnload {
     [self setCollectionView:nil];
     [services removeAllObjects];
-    [self.imageDownloadsInProgress removeAllObjects];
     services = nil;
-    _iconCache = nil;
     [super viewDidUnload];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    if (self.imageDownloadsInProgress != nil) {
-        NSArray *allDownloads = [self.imageDownloadsInProgress allValues];
-        [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    }
+
 }
 
 // 返回headview或footview
@@ -287,32 +213,12 @@
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                        @try {
                                            advDatas = [Tool readJsonStrToAdinfoArray:operation.responseString];
-                                           int length = [advDatas count];
+                                           NSInteger length = [advDatas count];
                                            
-                                           NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:length+2];
-                                           if (length > 1)
+                                           if (length > 0)
                                            {
-                                               ADInfo *adv = [advDatas objectAtIndex:length-1];
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:adv.adName image:adv.imgUrlFull tag:length-1];
-                                               [itemArray addObject:item];
+                                               [self initAdView];
                                            }
-                                           for (int i = 0; i < length; i++)
-                                           {
-                                               ADInfo *adv = [advDatas objectAtIndex:i];
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:adv.adName image:adv.imgUrlFull tag:i];
-                                               [itemArray addObject:item];
-                                               
-                                           }
-                                           //添加第一张图 用于循环
-                                           if (length >1)
-                                           {
-                                               ADInfo *adv = [advDatas objectAtIndex:0];
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:adv.adName image:adv.imgUrlFull tag:0];
-                                               [itemArray addObject:item];
-                                           }
-                                           bannerView = [[SGFocusImageFrame alloc] initWithFrame:CGRectMake(0, 0, 320, 135) delegate:self imageItems:itemArray isAuto:YES];
-                                           [bannerView scrollToIndex:0];
-                                           [self.advIv addSubview:bannerView];
                                        }
                                        @catch (NSException *exception) {
                                            [NdUncaughtExceptionHandler TakeException:exception];
@@ -331,32 +237,52 @@
     }
 }
 
-//顶部图片滑动点击委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame didSelectItem:(SGFocusImageItem *)item
+- (void)initAdView
 {
-    ADInfo *adv = (ADInfo *)[advDatas objectAtIndex:advIndex];
-    if (adv)
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    
+    NSMutableArray *imagesURL = [[NSMutableArray alloc] init];
+    NSMutableArray *titles = [[NSMutableArray alloc] init];
+    if ([advDatas count] > 0) {
+        for (ADInfo *ad in advDatas) {
+            [imagesURL addObject:ad.imgUrlFull];
+            [titles addObject:ad.adName];
+        }
+    }
+    
+    //如果你的这个广告视图是添加到导航控制器子控制器的View上,请添加此句,否则可忽略此句
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    adView = [AdView adScrollViewWithFrame:CGRectMake(0, 0, width, 135)  \
+                              imageLinkURL:imagesURL\
+                       placeHoderImageName:@"placeHoder.jpg" \
+                      pageControlShowStyle:UIPageControlShowStyleLeft];
+    
+    //    是否需要支持定时循环滚动，默认为YES
+    //    adView.isNeedCycleRoll = YES;
+    
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    //    设置图片滚动时间,默认3s
+    //    adView.adMoveTime = 2.0;
+    
+    //图片被点击后回调的方法
+    adView.callBack = ^(NSInteger index,NSString * imageURL)
     {
+        NSLog(@"被点中图片的索引:%ld---地址:%@",index,imageURL);
+        ADInfo *adv = (ADInfo *)[advDatas objectAtIndex:index];
         NSString *adDetailHtm = [NSString stringWithFormat:@"%@%@%@", api_base_url, htm_adDetail ,adv.adId];
         CommDetailView *detailView = [[CommDetailView alloc] init];
         detailView.titleStr = @"详情";
         detailView.urlStr = adDetailHtm;
         detailView.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:detailView animated:YES];
-    }
-}
-
-//顶部图片自动滑动委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame currentItem:(int)index;
-{
-    advIndex = index;
+    };
+    [self.advIv addSubview:adView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    bannerView.delegate = self;
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
@@ -367,7 +293,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    bannerView.delegate = nil;
 }
 
 - (IBAction)telAction:(id)sender

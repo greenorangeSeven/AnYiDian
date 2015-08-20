@@ -15,4 +15,10 @@
 @property (weak, nonatomic) ShopInfo *shopInfo;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 
+@property (weak, nonatomic) IBOutlet UIButton *praiseBtn;
+@property (weak, nonatomic) IBOutlet UIButton *commentBtn;
+
+- (IBAction)praiseAction:(id)sender;
+- (IBAction)commentAction:(id)sender;
+
 @end

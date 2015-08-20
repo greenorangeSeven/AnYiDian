@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HotChooseReusableView : UICollectionReusableView
+@interface HotChooseReusableView : UICollectionReusableView<UITableViewDataSource, UITableViewDelegate>
+{
+    NSMutableArray *advDatas;
+}
+
+@property (copy, nonatomic)  UINavigationController *navigationController;
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end

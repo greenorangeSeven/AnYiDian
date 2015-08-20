@@ -10,4 +10,8 @@
 
 @interface PayFeeCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UILabel *monthLb;
+@property (weak, nonatomic) IBOutlet UILabel *moneyLb;
+@property (weak, nonatomic) IBOutlet UILabel *stateLb;
+
 @end

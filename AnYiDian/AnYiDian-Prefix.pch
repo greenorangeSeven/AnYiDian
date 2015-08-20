@@ -39,8 +39,8 @@
 #define Appkey @"10000001"
 #define AppSecret @"Hr54hiz7"
 //
-//#define api_base_url @"http://192.168.1.102:8080/zlys_api/"
-#define api_base_url @"http://115.236.59.15:80/zlys_api/"
+//#define api_base_url @"http://192.168.1.110:8080/guizhou_api/"
+#define api_base_url @"http://112.126.66.58:80/guizhou_api/"
 //登录接口
 #define api_login @"regUser/login.htm"
 //找回密码
@@ -181,12 +181,52 @@
 #define api_findOrderByPage @"order/findOrderByPage.htm"
 //获取所有订单状态
 #define api_findAllOrderState @"order/findAllOrderState.htm"
+//新增全民营销
+#define api_addMarketingInfo @"estate/addMarketingInfo.htm"
 
 //分页查询商品信息(全城特价)
 #define api_findSaleCommodityByPage @"commodity/findSaleCommodityByPage.htm"
 
 //查询商家类型列表接口
 #define api_findShopTypeList @"shop/findShopTypeList.htm"
+
+//获取物业资讯列表
+#define api_findNewsInfoByPage @"news/findNewsInfoByPage.htm"
+//获取楼盘活动列表
+#define api_findEstateActivityOnTime @"activity/findEstateActivityOnTime.htm"
+//获取优惠政策列表
+#define api_findPreferentialPolicyOnTime @"estate/findPreferentialPolicyOnTime.htm"
+// 加入/取消楼盘活动点赞
+#define api_addCancelInEstateHeart @"activity/addCancelInEstateHeart.htm"
+// 加入/取消楼盘活动
+#define api_addCancelInEstateActivity @"activity/addCancelInEstateActivity.htm"
+// 获取志愿者新闻
+#define api_findVolunteerNewsInfoByPage @"news/findVolunteerNewsInfoByPage.htm"
+// 分页获取志愿者用户列表
+#define api_findVolunteerByPage @"regUser/findVolunteerByPage.htm"
+// 加入、退出志愿者
+#define api_changeVolunteerState @"regUser/changeVolunteerState.htm"
+// 楼盘信息介绍接口路径
+#define api_findEstateInfoByPage @"estate/findEstateInfoByPage.htm"
+// 分页查询最新资讯信息
+#define api_findRecentInfoByPage @"estate/findRecentInfoByPage.htm"
+// 分页查询用户积分详情列表
+#define api_findIntegralLogByPage @"integral/findIntegralLogByPage.htm"
+// 点赞、取消点赞（优惠政策）
+#define api_addCancelInYhEstateHeart @"estate/addCancelInEstateHeart.htm"
+// 加入/取消相关优惠政策
+#define api_addCancelInPreferentialPolicy @"estate/addCancelInPreferentialPolicy.htm"
+// 获取房屋出售、租赁的置顶top5记录
+#define api_findTopBusinessInfo @"business/findTopBusinessInfo.htm"
+// 为商家点赞
+#define api_addShopHeartCount @"shop/addShopHeartCount.htm"
+//添加商家评论
+#define api_addShopComment @"shop/addShopComment.htm"
+//获取待缴费账单详情列表
+#define api_getBillDetailsForNotPay @"bill/getBillDetailsForNotPay.htm"
+// 获取今日朋友圈发贴数
+#define api_findTodayTopicCount @"topic/findTodayTopicCount.htm"
+
 
 //订单支付成功状态码
 #define ORDER_PAY_OK @"9000"
@@ -216,68 +256,67 @@
 #define htm_shopDetail @"app/shopDetail.htm?shopId="
 //关于智慧社区
 #define htm_about @"app/about.htm"
+//行业动态等详情页
+#define htm_propertyNewsDetailHtm @"app/newsDetail.htm?newsId="
+//楼盘活动详情页
+#define htm_estateActivityDetail @"app/estateActivityDetail.htm?activityId="
+//志愿者详情页
+#define htm_volunteerNewsDetail @"app/volunteerNewsDetail.htm?newsId="
+//最新资讯详情页
+#define htm_recentDetail @"app/recentDetail.htm?newsId="
+//楼盘介绍详情页面
+#define htm_estateInfoDetail @"app/estateInfoDetail.htm?estateId="
+//优惠政策详情页
+#define htm_preferentialPolicyDetail @"app/preferentialPolicyDetail.htm?activityId="
 
 
 #define servicephone @"186-3513-9166"
 
-#define SettingTableIdentifier @"SettingTableIdentifier"
-#define NoticeNewCellIdentifier @"NoticeNewCellIdentifier"
-#define NoticeOldCellIdentifier @"NoticeOldCellIdentifier"
-#define CallServiceCellIdentifier @"CallServiceCellIdentifier"
-#define GoodBorrowCellIdentifier @"GoodBorrowCellIdentifier"
-#define ExpressCellIdentifier @"ExpressCellIdentifier"
-#define ExpressHistoryCellIdentifier @"ExpressHistoryCellIdentifier"
-#define CircleOfFriendsCellIdentifier @"CircleOfFriendsCellIdentifier"
-#define CircleOfFriendsImgCellIdentifier @"CircleOfFriendsImgCellIdentifier"
+#define PropertyPageCellIdentifier @"PropertyPageCellIdentifier"
+#define BuildingPageCellIdentifier @"BuildingPageCellIdentifier"
 #define RepairImageCellIdentifier @"RepairImageCellIdentifier"
 #define RepairTableCellIdentifier @"RepairTableCellIdentifier"
-#define LifeReferCellIdentifier @"LifeReferCellIdentifier"
-#define ConvenienceCellIdentifier @"ConvenienceCellIdentifier"
-#define ShopInfoCellIdentifier @"ShopInfoCellIdentifier"
 #define RepairBasicCellIdentifier @"RepairBasicCellIdentifier"
 #define RepairDispatchCellIdentifier @"RepairDispatchCellIdentifier"
 #define RepairFinishCellIdentifier @"RepairFinishCellIdentifier"
 #define RepairResultCellIdentifier @"RepairResultCellIdentifier"
-#define MonthlyCellIdentifier @"MonthlyCellIdentifier"
 #define SuitBasicCellIdentifier @"SuitBasicCellIdentifier"
 #define SuitReplyCellIdentifier @"SuitReplyCellIdentifier"
 #define SuitResutCellIdentifier @"SuitResutCellIdentifier"
-#define BorrowRecordCellIdentifier @"BorrowRecordCellIdentifier"
-#define GatePassInfoCellIdentifier @"GatePassInfoCellIdentifier"
-#define ActivityCollectionCellIdentifier @"ActivityCollectionCellIdentifier"
-#define Activity_35CollectionCellIdentifier @"Activity_35CollectionCellIdentifier"
+#define LifeReferCellIdentifier @"LifeReferCellIdentifier"
+#define PropertyNewsCellIdentifier @"PropertyNewsCellIdentifier"
+#define NoticeNewCellIdentifier @"NoticeNewCellIdentifier"
+#define VolunteerNewsCellIdentifier @"VolunteerNewsCellIdentifier"
+#define VolunteerFaceCellIdentifier @"VolunteerFaceCellIdentifier"
+#define CallServiceCellIdentifier @"CallServiceCellIdentifier"
+#define IntegralCellIdentifier @"IntegralCellIdentifier"
+#define OldHouseCellIdentifier @"OldHouseCellIdentifier"
+#define ConvenienceCellIdentifier @"ConvenienceCellIdentifier"
+#define PreferentialCellIdentifier @"PreferentialCellIdentifier"
 #define CircleOfFriendsFullCellIdentifier @"CircleOfFriendsFullCellIdentifier"
+#define CircleOfFriendsImgCellIdentifier @"CircleOfFriendsImgCellIdentifier"
 #define CircleOfFriendsReplyCellIdentifier @"CircleOfFriendsReplyCellIdentifier"
-#define PaymentCellIdentifier @"PaymentCellIdentifier"
-#define PaymentItemCellIdentifier @"PaymentItemCellIdentifier"
-#define TradeListCellIdentifier @"TradeListCellIdentifier"
-#define ReleasepermitCellIdentifier @"ReleasepermitCellIdentifier"
-#define HouseUserCellIdentifier @"HouseUserCellIdentifier"
-#define ChangeHouseCellIdentifier @"ChangeHouseCellIdentifier"
-#define BillCellIdentifier @"BillCellIdentifier"
-#define CommodityClassCellIdentifier @"CommodityClassCellIdentifier"
 #define CommodityCellIdentifier @"CommodityCellIdentifier"
-#define ShopCarCellIdentifier @"ShopCarCellIdentifier"
 #define ShopCarItemCellIdentifier @"ShopCarItemCellIdentifier"
+#define OrderCommodityCellIdentifier @"OrderCommodityCellIdentifier"
 #define ConfirmationCellIdentifier @"ConfirmationCellIdentifier"
 #define MyOrderCellIdentifier @"MyOrderCellIdentifier"
-#define OrderCommodityCellIdentifier @"OrderCommodityCellIdentifier"
-#define MyServiceOrderCellIdentifier @"MyServiceOrderCellIdentifier"
-#define GrouponInfoCellIdentifier @"GrouponInfoCellIdentifier"
+#define CommodityClassCellIdentifier @"CommodityClassCellIdentifier"
+#define ShopCarCellIdentifier @"ShopCarCellIdentifier"
+#define PayFeeCellIdentifier @"PayFeeCellIdentifier"
+#define HotChooseCellIdentifier @"HotChooseCellIdentifier"
+#define ChangeHouseCellIdentifier @"ChangeHouseCellIdentifier"
 
 
-#define Notification_RefreshMyRepairs @"Notification_RefreshMyRepairs"
-#define Notification_ShowPackAlertView @"Notification_ShowPackAlertView"
-#define Notification_RefreshSetting @"Notification_RefreshSetting"
-#define Notification_RefreshMyInbox @"Notification_RefreshMyInbox"
+
+#define Notification_RefreshAddVolunteerView @"Notification_RefreshAddVolunteerView"
+#define Notification_RefreshShopDetailView @"Notification_RefreshShopDetailView"
 #define Notification_RefreshTopic @"Notification_RefreshTopic"
-#define Notification_RefreshTrade @"Notification_RefreshTrade"
-#define Notification_RefreshPropertyPageView @"Notification_RefreshPropertyPageView"
-#define Notification_RefreshLifePageView @"Notification_LifePageView"
-#define Notification_RefreshSettingPageView @"Notification_RefreshSettingPageView"
 #define Notification_RefreshShopCarTable @"Notification_RefreshShopCarTable"
 #define Notification_CommodityDetailGotoOrder @"Notification_CommodityDetailGotoOrder"
 #define Notification_ShopCarGotoOrder @"Notification_ShopCarGotoOrder"
+#define Notification_RefreshPayFeeTableView @"Notification_RefreshPayFeeTableView"
+#define Notification_LifeServicePush @"Notification_LifeServicePush"
 
 
 #define UserInfoCache @"UserInfoCache"

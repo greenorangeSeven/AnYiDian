@@ -20,9 +20,12 @@
     BOOL _reloading;
 }
 
-@property (weak, nonatomic) IBOutlet UIImageView *userFaceIv;
+@property (weak, nonatomic) IBOutlet UILabel *faceBg1View;
+@property (weak, nonatomic) IBOutlet UILabel *faceBg2View;
+@property (weak, nonatomic) IBOutlet UIImageView *faceIv;
+
 @property (weak, nonatomic) IBOutlet UILabel *userInfoLb;
-@property (weak, nonatomic) IBOutlet UILabel *userAddressLb;
+@property (weak, nonatomic) IBOutlet UILabel *mobileNoLb;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 

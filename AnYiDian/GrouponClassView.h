@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SGFocusImageFrame.h"
-#import "SGFocusImageItem.h"
 
-@interface GrouponClassView : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,EGORefreshTableHeaderDelegate,MBProgressHUDDelegate, SGFocusImageFrameDelegate>
+
+@interface GrouponClassView : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,EGORefreshTableHeaderDelegate,MBProgressHUDDelegate>
 {
     NSMutableArray *classes;
     BOOL isLoading;
@@ -22,15 +21,11 @@
     BOOL _reloading;
     
     NSMutableArray *advDatas;
-    SGFocusImageFrame *bannerView;
-    int advIndex;
 }
 
 //@property (strong, nonatomic) UIImageView *advIv;
 @property (weak, nonatomic) IBOutlet UIImageView *advIv;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-
-- (void)refreshExpressData;
 
 //下拉刷新
 - (void)refresh;

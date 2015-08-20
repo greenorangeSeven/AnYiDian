@@ -10,4 +10,9 @@
 
 @interface OldHouseCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UIImageView *imageIv;
+@property (weak, nonatomic) IBOutlet UILabel *titleLb;
+@property (weak, nonatomic) IBOutlet UILabel *contentLb;
+@property (weak, nonatomic) IBOutlet UIButton *phoneBtn;
+
 @end

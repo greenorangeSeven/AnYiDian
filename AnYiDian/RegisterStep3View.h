@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RegisterStep3View : UIViewController
+@interface RegisterStep3View : UIViewController<UIAlertViewDelegate>
 
 @property (nonatomic, strong) NSString *houseNumId;
 @property (nonatomic, strong) NSString *ownerNameStr;

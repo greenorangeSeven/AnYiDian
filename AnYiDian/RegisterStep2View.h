@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *ownerNameTf;
 @property (weak, nonatomic) IBOutlet UITextField *idCardTf;
 @property (weak, nonatomic) IBOutlet UITextField *identityTf;
+@property (weak, nonatomic) IBOutlet UIButton *nextStepBtn;
 
 - (IBAction)nextStepAction:(id)sender;
 

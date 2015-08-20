@@ -7,10 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SGFocusImageFrame.h"
-#import "SGFocusImageItem.h"
 
-@interface CommodityClassView : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,EGORefreshTableHeaderDelegate,MBProgressHUDDelegate, SGFocusImageFrameDelegate>
+@interface CommodityClassView : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,EGORefreshTableHeaderDelegate,MBProgressHUDDelegate>
 {
     NSMutableArray *classes;
     BOOL isLoading;
@@ -22,7 +20,6 @@
     BOOL _reloading;
     
     NSMutableArray *advDatas;
-    SGFocusImageFrame *bannerView;
     int advIndex;
 }
 

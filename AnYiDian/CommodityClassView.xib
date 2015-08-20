@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
@@ -17,8 +17,9 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="5pu-TB-IbJ">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="none" id="5pu-TB-IbJ">
                     <rect key="frame" x="0.0" y="140" width="320" height="428"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="Kgg-pj-ai2">
                         <size key="itemSize" width="106" height="106"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -26,27 +27,19 @@
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
-                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C6K-OF-MmH">
+                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="C6K-OF-MmH">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="140"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="140" id="aqz-Sa-YN4"/>
-                        <constraint firstAttribute="width" constant="320" id="qxh-cU-gG3"/>
-                    </constraints>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
-            <constraints>
-                <constraint firstAttribute="trailing" secondItem="5pu-TB-IbJ" secondAttribute="trailing" id="1Ne-UQ-8Sz"/>
-                <constraint firstAttribute="trailing" secondItem="C6K-OF-MmH" secondAttribute="trailing" id="A9t-3m-T4A"/>
-                <constraint firstItem="C6K-OF-MmH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ABO-QB-A3w"/>
-                <constraint firstItem="5pu-TB-IbJ" firstAttribute="top" secondItem="C6K-OF-MmH" secondAttribute="bottom" id="BbL-In-MMX"/>
-                <constraint firstItem="C6K-OF-MmH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="HVY-sg-haD"/>
-                <constraint firstItem="5pu-TB-IbJ" firstAttribute="top" secondItem="C6K-OF-MmH" secondAttribute="bottom" id="Qz3-7M-41t"/>
-                <constraint firstItem="5pu-TB-IbJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Z9i-gn-EbD"/>
-                <constraint firstAttribute="bottom" secondItem="5pu-TB-IbJ" secondAttribute="bottom" id="vfe-GZ-YBP"/>
-            </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
             <point key="canvasLocation" x="330" y="114"/>
         </view>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

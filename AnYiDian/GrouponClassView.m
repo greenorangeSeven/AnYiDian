@@ -10,14 +10,18 @@
 #import "GrouponClassCell.h"
 #import "CommDetailView.h"
 #import "GrouponView.h"
-#import "ActivityDetailView.h"
 #import "CommodityDetailView.h"
 #import "UIImageView+WebCache.h"
 #import "ShopType.h"
 #import "AppDelegate.h"
-#import "YRSideViewController.h"
+#import "AdView.h"
+#import "ShopCarView.h"
+#import "SignInView.h"
 
 @interface GrouponClassView ()
+{
+    AdView * adView;
+}
 
 @end
 
@@ -26,16 +30,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"快送";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"生活超市";
+    self.tabBarItem.title = @"超市";
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+//    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle: @"签到" style:UIBarButtonItemStyleBordered target:self action:@selector(signInAction:)];
+//    self.navigationItem.leftBarButtonItem = leftBtn;
+    
+    UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 22, 22)];
+    [rBtn addTarget:self action:@selector(addShopCarAction:) forControlEvents:UIControlEventTouchUpInside];
+    [rBtn setImage:[UIImage imageNamed:@"shopcar"] forState:UIControlStateNormal];
+    UIBarButtonItem *btnTel = [[UIBarButtonItem alloc]initWithCustomView:rBtn];
+    self.navigationItem.rightBarButtonItem = btnTel;
+
     
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -53,7 +62,21 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
     [self refreshClassData];
+    
     [self getADVData];
+}
+
+- (void)signInAction:(id)sender
+{
+    SignInView *signIn = [[SignInView alloc] init];
+    signIn.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:signIn animated:YES];
+}
+
+-(void)addShopCarAction:(id)sender{
+    ShopCarView *carView = [[ShopCarView alloc] init];
+    carView.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:carView animated:YES];
 }
 
 - (void)refreshClassData
@@ -152,9 +175,8 @@
 //定义每个UICollectionView 的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    return CGSizeMake(106, 106);
-    
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    return CGSizeMake(width/3-1, width/3);
 }
 
 //定义每个UICollectionView 的 margin
@@ -262,7 +284,7 @@
         UserInfo *userInfo = [[UserModel Instance] getUserInfo];
         //生成获取广告URL
         NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
-        [param setValue:@"1143260585310200" forKey:@"typeId"];
+        [param setValue:@"1142357056821000" forKey:@"typeId"];
         [param setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
         [param setValue:@"1" forKey:@"timeCon"];
         NSString *getADDataUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findAdInfoList] params:param];
@@ -271,33 +293,12 @@
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                        @try {
                                            advDatas = [Tool readJsonStrToAdinfoArray:operation.responseString];
-                                           int length = [advDatas count];
+                                           NSInteger length = [advDatas count];
                                            
-                                           NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:length+2];
-                                           if (length > 1)
+                                           if (length > 0)
                                            {
-                                               ADInfo *adv = [advDatas objectAtIndex:length-1];
-                                               
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:length-1];
-                                               [itemArray addObject:item];
+                                               [self initAdView];
                                            }
-                                           for (int i = 0; i < length; i++)
-                                           {
-                                               ADInfo *adv = [advDatas objectAtIndex:i];
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:i];
-                                               [itemArray addObject:item];
-                                               
-                                           }
-                                           //添加第一张图 用于循环
-                                           if (length >1)
-                                           {
-                                               ADInfo *adv = [advDatas objectAtIndex:0];
-                                               SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithTitle:nil image:adv.imgUrlFull tag:0];
-                                               [itemArray addObject:item];
-                                           }
-                                           bannerView = [[SGFocusImageFrame alloc] initWithFrame:CGRectMake(0, 0, 320, 135) delegate:self imageItems:itemArray isAuto:YES];
-                                           [bannerView scrollToIndex:0];
-                                           [self.advIv addSubview:bannerView];
                                        }
                                        @catch (NSException *exception) {
                                            [NdUncaughtExceptionHandler TakeException:exception];
@@ -316,47 +317,64 @@
     }
 }
 
-//顶部图片滑动点击委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame didSelectItem:(SGFocusImageItem *)item
+- (void)initAdView
 {
-    ADInfo *adv = (ADInfo *)[advDatas objectAtIndex:advIndex];
-    if (adv)
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    
+    NSMutableArray *imagesURL = [[NSMutableArray alloc] init];
+    NSMutableArray *titles = [[NSMutableArray alloc] init];
+    if ([advDatas count] > 0) {
+        for (ADInfo *ad in advDatas) {
+            [imagesURL addObject:ad.imgUrlFull];
+            [titles addObject:ad.adName];
+        }
+    }
+    
+    //如果你的这个广告视图是添加到导航控制器子控制器的View上,请添加此句,否则可忽略此句
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    adView = [AdView adScrollViewWithFrame:CGRectMake(0, 0, width, 172)  \
+                              imageLinkURL:imagesURL\
+                       placeHoderImageName:@"placeHoder.jpg" \
+                      pageControlShowStyle:UIPageControlShowStyleLeft];
+    
+    //    是否需要支持定时循环滚动，默认为YES
+    //    adView.isNeedCycleRoll = YES;
+    
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    //    设置图片滚动时间,默认3s
+    //    adView.adMoveTime = 2.0;
+    
+    //图片被点击后回调的方法
+    adView.callBack = ^(NSInteger index,NSString * imageURL)
     {
-        NSString *adDetailHtm = [NSString stringWithFormat:@"%@%@%@", api_base_urlnotport, htm_adDetail ,adv.adId];
+        NSLog(@"被点中图片的索引:%ld---地址:%@",index,imageURL);
+        ADInfo *adv = (ADInfo *)[advDatas objectAtIndex:index];
+        NSString *adDetailHtm = [NSString stringWithFormat:@"%@%@%@", api_base_url, htm_adDetail ,adv.adId];
         CommDetailView *detailView = [[CommDetailView alloc] init];
         detailView.titleStr = @"详情";
         detailView.urlStr = adDetailHtm;
         detailView.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:detailView animated:YES];
-    }
-}
-
-//顶部图片自动滑动委托协议实现事件
-- (void)foucusImageFrame:(SGFocusImageFrame *)imageFrame currentItem:(int)index;
-{
-    advIndex = index;
+    };
+    [self.advIv addSubview:adView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    bannerView.delegate = self;
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],UITextAttributeTextColor,nil]];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
     self.navigationItem.backBarButtonItem = backItem;
-    
-    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication]delegate];
-    YRSideViewController *sideViewController=[delegate sideViewController];
-    [sideViewController setNeedSwipeShowMenu:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    bannerView.delegate = nil;
 }
 
 /*

@@ -8,6 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
-@interface IntegralMarketView : UIViewController
+@interface IntegralMarketView : UIViewController<EGORefreshTableHeaderDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+{
+    NSMutableArray *commoditys;
+    
+    //下拉刷新
+    BOOL _reloading;
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    BOOL isLoading;
+    BOOL isLoadOver;
+    int allCount;
+}
+
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+
+//下拉刷新
+- (void)refresh;
+- (void)reloadTableViewDataSource;
+- (void)doneLoadingTableViewData;
 
 @end

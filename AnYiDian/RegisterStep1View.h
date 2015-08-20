@@ -16,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *buildingTf;
 @property (weak, nonatomic) IBOutlet UITextField *unitTf;
 @property (weak, nonatomic) IBOutlet UITextField *houseNumTf;
+@property (weak, nonatomic) IBOutlet UIButton *nextStepBtn;
+@property (weak, nonatomic) IBOutlet UIButton *inviteRegisterBtn;
 
 - (IBAction)nextStepAction:(id)sender;
 - (IBAction)inviteRegisterAction:(id)sender;

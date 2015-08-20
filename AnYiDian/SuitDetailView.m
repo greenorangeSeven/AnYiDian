@@ -32,13 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"投诉建议";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"咨询投诉";
     
     if([self.present isEqualToString:@"present"] == YES)
     {
@@ -149,6 +143,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     int row = [indexPath row];
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
     if (row == 0) {
         SuitBasicCell *cell = [tableView dequeueReusableCellWithIdentifier:SuitBasicCellIdentifier];
         if (!cell) {
@@ -262,7 +257,7 @@
         
         for (int i = 0; i < [result.suitResult count]; i++) {
             SuitResultItem *item = [result.suitResult objectAtIndex:i];
-            UIView *itemView = [[UIView alloc]initWithFrame:CGRectMake(0.0, 39.0 * i, 320.0, 39.0)];
+            UIView *itemView = [[UIView alloc]initWithFrame:CGRectMake(0.0, 39.0 * i, width, 39.0)];
             
             UILabel *itemNameLb = [[UILabel alloc]initWithFrame:CGRectMake(8.0, 9.0, 87.0, 21.0)];
             itemNameLb.font = [UIFont systemFontOfSize:14];
@@ -270,12 +265,12 @@
             itemNameLb.textColor = [UIColor colorWithRed:137.0/255.0 green:137.0/255.0 blue:137.0/255.0 alpha:1.0];
             [itemView addSubview:itemNameLb];
             
-            UILabel *bottomLb = [[UILabel alloc]initWithFrame:CGRectMake(0.0, 38.0, 320.0, 1.0)];
+            UILabel *bottomLb = [[UILabel alloc]initWithFrame:CGRectMake(0.0, 38.0, width, 1.0)];
             bottomLb.backgroundColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:230.0/255.0 alpha:1.0];
             [itemView addSubview:bottomLb];
             
             //星级评价
-            AMRatingControl *scoreControl = [[AMRatingControl alloc] initWithLocation:CGPointMake(195, 10) emptyImage:dot solidImage:star andMaxRating:5];
+            AMRatingControl *scoreControl = [[AMRatingControl alloc] initWithLocation:CGPointMake(width - 120, 10) emptyImage:dot solidImage:star andMaxRating:5];
             scoreControl.tag = i;
             scoreControl.update = @selector(updateScoreRating:);
             scoreControl.targer = self;
@@ -420,8 +415,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];

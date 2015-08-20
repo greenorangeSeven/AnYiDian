@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PropertyNews : NSObject
+@interface PropertyNews : Jastor
+
+@property (copy, nonatomic) NSString *newsId;
+@property (copy, nonatomic) NSString *title;
+@property (copy, nonatomic) NSString *desc;
+@property (copy, nonatomic) NSString *imgFull;
 
 @end

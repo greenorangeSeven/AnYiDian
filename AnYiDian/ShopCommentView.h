@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ShopCommentView : UIViewController
+@interface ShopCommentView : UIViewController<UITextViewDelegate>
+
+@property (weak, nonatomic) NSString *shopId;
+
+@property (weak, nonatomic) IBOutlet UILabel *sorceView;
+@property (weak, nonatomic) IBOutlet UITextView *contentTv;
+@property (weak, nonatomic) IBOutlet UILabel *placeholderLb;
+
+@property (weak, nonatomic) IBOutlet UIButton *commentBtn;
+- (IBAction)commentAction:(id)sender;
 
 @end

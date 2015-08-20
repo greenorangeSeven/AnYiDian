@@ -72,14 +72,32 @@
         _adScrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
         
         _leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, kAdViewWidth, kAdViewHeight)];
+        
+        [_leftImageView setContentScaleFactor:[[UIScreen mainScreen] scale]];
+        _leftImageView.contentMode =  UIViewContentModeScaleAspectFill;
+        _leftImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        _leftImageView.clipsToBounds  = YES;
+        
         [_adScrollView addSubview:_leftImageView];
         
         _centerImageView = [[UIImageView alloc]initWithFrame:CGRectMake(kAdViewWidth, 0, kAdViewWidth, kAdViewHeight)];
+        
+        [_centerImageView setContentScaleFactor:[[UIScreen mainScreen] scale]];
+        _centerImageView.contentMode =  UIViewContentModeScaleAspectFill;
+        _centerImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        _centerImageView.clipsToBounds  = YES;
+        
         _centerImageView.userInteractionEnabled = YES;
         [_centerImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)]];
         [_adScrollView addSubview:_centerImageView];
         
         _rightImageView = [[UIImageView alloc]initWithFrame:CGRectMake(kAdViewWidth*2, 0, kAdViewWidth, kAdViewHeight)];
+        
+        [_rightImageView setContentScaleFactor:[[UIScreen mainScreen] scale]];
+        _rightImageView.contentMode =  UIViewContentModeScaleAspectFill;
+        _rightImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        _rightImageView.clipsToBounds  = YES;
+        
         [_adScrollView addSubview:_rightImageView];
         
         _isNeedCycleRoll = YES;
@@ -205,7 +223,7 @@
     _centerAdLabel = [[UILabel alloc]init];
     _centerAdLabel.backgroundColor = [UIColor clearColor];
     _centerAdLabel.frame = CGRectMake(0, kAdViewHeight - 30, kAdViewWidth-20, 30);
-    _centerAdLabel.textColor = [UIColor lightGrayColor];
+    _centerAdLabel.textColor = [UIColor whiteColor];
     _centerAdLabel.font = [UIFont boldSystemFontOfSize:15];
     [self addSubview:_centerAdLabel];
     

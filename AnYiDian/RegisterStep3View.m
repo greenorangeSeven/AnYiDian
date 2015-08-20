@@ -9,13 +9,9 @@
 #import "RegisterStep3View.h"
 #import "NSString+STRegex.h"
 #import "EGOCache.h"
-#import "PropertyPageView.h"
-#import "LifePageView.h"
-#import "MyPageView.h"
-#import "SettingPageView.h"
 #import "AppDelegate.h"
 #import "XGPush.h"
-#import "MainPageNewView.h"
+#import "LoginView.h"
 
 @interface RegisterStep3View ()
 {
@@ -32,20 +28,16 @@
     [super viewDidLoad];
     
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.view.frame.size.height);
-    
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"注册";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+
+    self.title = @"注册";
     
     UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 21, 22)];
     [rBtn addTarget:self action:@selector(telAction:) forControlEvents:UIControlEventTouchUpInside];
     [rBtn setImage:[UIImage imageNamed:@"head_tel"] forState:UIControlStateNormal];
     UIBarButtonItem *btnTel = [[UIBarButtonItem alloc]initWithCustomView:rBtn];
     self.navigationItem.rightBarButtonItem = btnTel;
+    
+    [self.finishBtn.layer  setCornerRadius:5.0f];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -306,46 +298,32 @@
 
 -(void)gotoTabbar
 {
-    //物业
-//    PropertyPageView *propertyPage = [[PropertyPageView alloc] initWithNibName:@"PropertyPageView" bundle:nil];
-//    propertyPage.tabBarItem.image = [UIImage imageNamed:@"tab_pro"];
-//    propertyPage.tabBarItem.title = @"物业";
-//    UINavigationController *propertyPageNav = [[UINavigationController alloc] initWithRootViewController:propertyPage];
-    MainPageNewView *mainPage = [[MainPageNewView alloc] initWithNibName:@"MainPageNewView" bundle:nil];
-    mainPage.tabBarItem.image = [UIImage imageNamed:@"tab_pro"];
-    mainPage.tabBarItem.title = @"首页";
-    UINavigationController *mainPageNav = [[UINavigationController alloc] initWithRootViewController:mainPage];
-    
-    //生活
-    LifePageView *lifePage = [[LifePageView alloc] initWithNibName:@"LifePageView" bundle:nil];
-    lifePage.tabBarItem.image = [UIImage imageNamed:@"tab_life"];
-    lifePage.tabBarItem.title = @"生活";
-    UINavigationController *lifePageNav = [[UINavigationController alloc] initWithRootViewController:lifePage];
-    
-    //我的
-    MyPageView *myPage = [[MyPageView alloc] initWithNibName:@"MyPageView" bundle:nil];
-    myPage.tabBarItem.image = [UIImage imageNamed:@"tab_my"];
-    myPage.tabBarItem.title = @"我的";
-    UINavigationController *myPageNav = [[UINavigationController alloc] initWithRootViewController:myPage];
-    
-    //设置
-    SettingPageView *settingPage = [[SettingPageView alloc] initWithNibName:@"SettingPageView" bundle:nil];
-    settingPage.tabBarItem.image = [UIImage imageNamed:@"tab_setting"];
-    settingPage.tabBarItem.title = @"设置";
-    UINavigationController *settingPageNav = [[UINavigationController alloc] initWithRootViewController:settingPage];
-    
-    UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.viewControllers = [NSArray arrayWithObjects:
-                                        mainPage,
-                                        lifePageNav,
-                                        myPageNav,
-                                        settingPageNav,
-                                        nil];
-    [[tabBarController tabBar] setSelectedImageTintColor:[Tool getColorForMain]];
-    [[self.tabBarController tabBar] setBackgroundImage:[UIImage imageNamed:@"tabbar_bg"]];
-    
-    AppDelegate *appdele = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    appdele.window.rootViewController = tabBarController;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"注册账号成功，请等待管理员审核！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    alert.tag = 0;
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        if (alertView.tag == 0)
+        {
+            //设置登录并保存用户信息
+            UserModel *userModel = [UserModel Instance];
+            [userModel saveIsLogin:NO];
+            [userModel logoutUser];
+            [userModel saveAccount:@"" andPwd:@""];
+            
+            UserHouse *defaultHouse = [userModel getUserInfo].defaultUserHouse;
+            
+            [XGPush delTag:defaultHouse.cellId];
+            
+            LoginView *loginView = [[LoginView alloc] initWithNibName:@"LoginView" bundle:nil];
+            UINavigationController *loginNav = [[UINavigationController alloc] initWithRootViewController:loginView];
+            AppDelegate *appdele = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            appdele.window.rootViewController = loginNav;
+        }
+    }
 }
 
 @end

@@ -7,10 +7,8 @@
 //
  
 #import <UIKit/UIKit.h>
-#import "SGFocusImageFrame.h"
-#import "SGFocusImageItem.h"
 
-@interface NoticeTableView : UIViewController<UITableViewDelegate,UITableViewDataSource,EGORefreshTableHeaderDelegate,MBProgressHUDDelegate, SGFocusImageFrameDelegate>
+@interface NoticeTableView : UIViewController<UITableViewDelegate,UITableViewDataSource,EGORefreshTableHeaderDelegate,MBProgressHUDDelegate>
 {
     NSMutableArray *notices;
     BOOL isLoading;
@@ -20,13 +18,11 @@
     //下拉刷新
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
-    
-    NSMutableArray *advDatas;
-    SGFocusImageFrame *bannerView;
-    int advIndex;
 }
 
-@property (weak, nonatomic) IBOutlet UIImageView *advIv;
+
+@property (copy, nonatomic) NSString *isCommittee;
+@property (weak, nonatomic) IBOutlet UIView *headerView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 - (void)reload:(BOOL)noRefresh;

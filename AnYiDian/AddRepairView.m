@@ -17,6 +17,7 @@
 
 @interface AddRepairView ()
 {
+    UserInfo *userInfo;
     NSString *repairTypeId;
     NSArray *repairTypeArray;
     NSMutableArray *repairImageArray;
@@ -32,24 +33,36 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    userInfo = [[UserModel Instance] getUserInfo];
+    
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.view.frame.size.height);
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"物业报修";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"物业报修";
     
-    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle: @"报修单" style:UIBarButtonItemStyleBordered target:self action:@selector(pushRepairListAction:)];
+    UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [rBtn addTarget:self action:@selector(pushRepairListAction:) forControlEvents:UIControlEventTouchUpInside];
+    [rBtn setImage:[UIImage imageNamed:@"head_mys"] forState:UIControlStateNormal];
+    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc]initWithCustomView:rBtn];
     self.navigationItem.rightBarButtonItem = rightBtn;
     
-    UserInfo *userInfo = [[UserModel Instance] getUserInfo];
-    [self.userFaceIv setImageWithURL:[NSURL URLWithString:userInfo.photoFull] placeholderImage:[UIImage imageNamed:@"default_head.png"]];
+    [self.submitRepairBtn.layer setCornerRadius:5.0f];
+    [self.repairCostBtn.layer setCornerRadius:5.0f];
     
-    self.userInfoLb.text = [NSString stringWithFormat:@"%@(%@)", userInfo.regUserName, userInfo.mobileNo];
-    self.userAddressLb.text = [NSString stringWithFormat:@"%@%@%@--%@", userInfo.defaultUserHouse.cellName, userInfo.defaultUserHouse.buildingName, userInfo.defaultUserHouse.numberName, userInfo.defaultUserHouse.userTypeName];
+    //图片圆形处理
+    self.faceBg1View.layer.masksToBounds = YES;
+    self.faceBg1View.layer.cornerRadius = self.faceBg1View.frame.size.height / 2;    //最重要的是这个地方要设成imgview高的一半
+    
+    self.faceBg2View.layer.masksToBounds = YES;
+    self.faceBg2View.layer.cornerRadius = self.faceBg2View.frame.size.height / 2;    //最重要的是这个地方要设成imgview高的一半
+    
+    self.faceIv.layer.masksToBounds = YES;
+    self.faceIv.layer.cornerRadius = self.faceIv.frame.size.height / 2;    //最重要的是这个地方要设成imgview高的一半
+    
+    userInfo = [[UserModel Instance] getUserInfo];
+    [self.faceIv sd_setImageWithURL:[NSURL URLWithString:userInfo.photoFull] placeholderImage:[UIImage imageNamed:@"default_head.png"]];
+    
+    self.mobileNoLb.text = [NSString stringWithFormat:@"手机号码：%@", userInfo.mobileNo];
+    self.userInfoLb.text = [NSString stringWithFormat:@"%@%@%@    %@", userInfo.defaultUserHouse.cellName, userInfo.defaultUserHouse.buildingName, userInfo.defaultUserHouse.numberName, userInfo.regUserName];
     
     self.repairContentTv.delegate = self;
     
@@ -497,7 +510,7 @@
 }
 
 - (IBAction)telServiceAction:(id)sender {
-    UserInfo *userInfo = [[UserModel Instance] getUserInfo];
+//    UserInfo *userInfo = [[UserModel Instance] getUserInfo];
     NSURL *phoneUrl = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", userInfo.defaultUserHouse.phone]];
     if (!phoneWebView) {
         phoneWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
@@ -513,7 +526,7 @@
     }
     self.submitRepairBtn.enabled = NO;
     
-    UserInfo *userInfo = [[UserModel Instance] getUserInfo];
+//    UserInfo *userInfo = [[UserModel Instance] getUserInfo];
     
     //生成新增报修Sign
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
@@ -553,7 +566,6 @@
     detailView.titleStr = @"收费标准";
     detailView.urlStr = pushDetailHtm;
     [self.navigationController pushViewController:detailView animated:YES];
-    
 }
 
 - (void)requestSubmit:(ASIHTTPRequest *)request
@@ -580,10 +592,6 @@
     }
     else
     {
-        RepairTableView *repairTableView = [[RepairTableView alloc] init];
-        repairTableView.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:repairTableView animated:YES];
-        
         [repairImageArray removeAllObjects];
         UIImage *myImage = [UIImage imageNamed:@"cameralogo"];
         [repairImageArray addObject:myImage];
@@ -592,14 +600,16 @@
         self.repairContentTv.text = @"";
         self.repairContentPlaceholder.hidden = NO;
         self.submitRepairBtn.enabled = YES;
+        
+        RepairTableView *repairTableView = [[RepairTableView alloc] init];
+        repairTableView.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:repairTableView animated:YES];
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];

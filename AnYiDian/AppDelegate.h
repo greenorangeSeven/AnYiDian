@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BMapKit.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,BMKGeneralDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property BOOL isForeground;
+@property (copy, nonatomic) NSDictionary *pushInfo;
 
 
 @end

@@ -14,6 +14,7 @@
 #import "IQKeyboardManager/KeyboardManager.framework/Headers/IQKeyboardManager.h"
 #import "ModifyUserInfoView.h"
 #import "PopularityView.h"
+#import "SignInView.h"
 
 @interface CircleOfFriendsView ()
 
@@ -29,14 +30,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title =@"朋友圈";
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"社区朋友圈";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+//    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle: @"签到" style:UIBarButtonItemStyleBordered target:self action:@selector(signInAction:)];
+//    self.navigationItem.leftBarButtonItem = leftBtn;
+    
+    UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 22, 20)];
+    [rBtn addTarget:self action:@selector(publicTopicAction:) forControlEvents:UIControlEventTouchUpInside];
+    [rBtn setImage:[UIImage imageNamed:@"topic_publish"] forState:UIControlStateNormal];
+    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc]initWithCustomView:rBtn];
+    self.navigationItem.rightBarButtonItem = rightBtn;
     
     //适配iOS7uinavigationbar遮挡的问题
     if(IS_IOS7)
@@ -77,6 +80,13 @@
     self.textField.inputAccessoryView = [self keyboardToolBar];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshed:) name:Notification_RefreshTopic object:nil];
+}
+
+- (void)signInAction:(id)sender
+{
+    SignInView *signIn = [[SignInView alloc] init];
+    signIn.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:signIn animated:YES];
 }
 
 - (void)refreshed:(NSNotification *)notification
@@ -187,7 +197,13 @@
     UIToolbar *toolBar = [[UIToolbar alloc] init];
     [toolBar sizeToFit];
     
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 4, 250, 32)];
+    float width = self.view.frame.size.width;
+    if(IS_IPHONE_6)
+    {
+        width = 750/2;
+    }
+    
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 4, width - 70, 32)];
     textField.delegate = self;
     textField.borderStyle = UITextBorderStyleRoundedRect;
     self.textFieldOnToolbar = textField;
@@ -198,6 +214,7 @@
     doneButton.title = @"回复";
     doneButton.style = UIBarButtonItemStyleDone;
     doneButton.action = @selector(doneClicked:);
+    doneButton.tintColor = [Tool getColorForMain];
     doneButton.target = self;
     
     [toolBar setItems:@[item,doneButton]];
@@ -654,7 +671,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    int row = [indexPath row];
+    NSInteger row = [indexPath row];
     //点击“下面20条”
     if (row >= [topics count]) {
         //启动刷新
@@ -721,7 +738,7 @@
     }
 }
 
-- (IBAction)publicTopicAction:(id)sender {
+- (void)publicTopicAction:(id)sender {
     UserInfo *userInfo = [[UserModel Instance] getUserInfo];
     if ([userInfo.nickName length] == 0) {
         if (self.publishAlert == nil) {
@@ -750,7 +767,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],UITextAttributeTextColor,nil]];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];

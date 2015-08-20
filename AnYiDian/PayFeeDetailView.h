@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Bill.h"
 
 @interface PayFeeDetailView : UIViewController
+
+@property (weak, nonatomic) Bill *bill;
+@property (weak, nonatomic) IBOutlet UILabel *monthLb;
+@property (weak, nonatomic) IBOutlet UILabel *moneyLb;
+@property (weak, nonatomic) IBOutlet UILabel *totalLb;
+@property (weak, nonatomic) IBOutlet UIButton *payBtn;
+- (IBAction)doPayAction:(id)sender;
 
 @end

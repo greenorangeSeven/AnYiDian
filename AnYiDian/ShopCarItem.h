@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString *shopId;
 @property (nonatomic, retain) NSString *shopName;
 @property double price;
+@property int integral;
 @property int number;
 @property double subtotal;
 @property (nonatomic, retain) NSString *ischeck;

@@ -19,6 +19,7 @@
 @property double distance;
 @property (nonatomic, retain) NSString *remark;
 @property (nonatomic, retain) NSString *imgUrlFull;
+@property int heartCount;
 
 @property (nonatomic, retain) UIImage *imgData;
 

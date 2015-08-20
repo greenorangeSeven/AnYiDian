@@ -10,4 +10,11 @@
 
 @interface SignInView : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIButton *signInBtn;
+@property (weak, nonatomic) IBOutlet UIButton *luckyDrawBtn;
+
+- (IBAction)signInAction:(id)sender;
+- (IBAction)luckyDrawAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *integralLb;
+
 @end

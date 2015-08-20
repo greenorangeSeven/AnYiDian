@@ -11,6 +11,7 @@
 #import "LifeReferCell.h"
 #import "LifeReferFooterReusableView.h"
 #import "CommDetailView.h"
+#import "UIImageView+WebCache.h"
 
 @interface LifeReferView ()
 
@@ -20,17 +21,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"生活查询";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
     
+    self.title = @"生活助手";
+
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     
-    self.imageDownloadsInProgress = [NSMutableDictionary dictionary];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[LifeReferCell class] forCellWithReuseIdentifier:LifeReferCellIdentifier];
@@ -107,7 +102,7 @@
             }
         }
     }
-    int row = [indexPath row];
+    NSInteger row = [indexPath row];
     LifeRefer *refer = [refers objectAtIndex:row];
     if ([refer.lifeTypeId isEqualToString:@"-1"]) {
         cell.referNameLb.text = nil;
@@ -116,34 +111,8 @@
     }
     cell.referNameLb.text = refer.lifeTypeName;
     
-    //图片显示及缓存
-    if (refer.imgData) {
-        cell.referIv.image = refer.imgData;
-    }
-    else
-    {
-        if ([refer.imgUrlFull isEqualToString:@""]) {
-            refer.imgData = [UIImage imageNamed:@"loadingpic2.png"];
-        }
-        else
-        {
-            NSData * imageData = [_iconCache getImage:[TQImageCache parseUrlForCacheName:refer.imgUrlFull]];
-            if (imageData) {
-                refer.imgData = [UIImage imageWithData:imageData];
-                cell.referIv.image = refer.imgData;
-            }
-            else
-            {
-                IconDownloader *downloader = [self.imageDownloadsInProgress objectForKey:[NSString stringWithFormat:@"%d", [indexPath row]]];
-                if (downloader == nil) {
-                    ImgRecord *record = [ImgRecord new];
-                    NSString *urlStr = refer.imgUrlFull;
-                    record.url = urlStr;
-                    [self startIconDownload:record forIndexPath:indexPath];
-                }
-            }
-        }
-    }
+    [cell.referIv sd_setImageWithURL:[NSURL URLWithString:refer.imgUrlFull] placeholderImage:[UIImage imageNamed:@"placeHoder"]];
+    
     return cell;
 }
 
@@ -151,7 +120,14 @@
 //定义每个UICollectionView 的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(79, 90);
+    if(IS_IPHONE_6)
+    {
+        return CGSizeMake(93, 100);
+    }
+    else
+    {
+        return CGSizeMake(79, 90);
+    }
 }
 
 //定义每个UICollectionView 的 margin
@@ -179,46 +155,9 @@
     return YES;
 }
 
-#pragma 下载图片
-- (void)startIconDownload:(ImgRecord *)imgRecord forIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *key = [NSString stringWithFormat:@"%d",[indexPath row]];
-    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:key];
-    if (iconDownloader == nil) {
-        iconDownloader = [[IconDownloader alloc] init];
-        iconDownloader.imgRecord = imgRecord;
-        iconDownloader.index = key;
-        iconDownloader.delegate = self;
-        [self.imageDownloadsInProgress setObject:iconDownloader forKey:key];
-        [iconDownloader startDownload];
-    }
-}
-
-- (void)appImageDidLoad:(NSString *)index
-{
-    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:index];
-    if (iconDownloader)
-    {
-        int _index = [index intValue];
-        if (_index >= [refers count]) {
-            return;
-        }
-        LifeRefer *refer = [refers objectAtIndex:[index intValue]];
-        if (refer) {
-            refer.imgData = iconDownloader.imgRecord.img;
-            // cache it
-            NSData * imageData = UIImagePNGRepresentation(refer.imgData);
-            [_iconCache putImage:imageData withName:[TQImageCache parseUrlForCacheName:refer.imgUrlFull]];
-            [self.collectionView reloadData];
-        }
-    }
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    NSArray *allDownloads = [self.imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
     //清空
     for (LifeRefer *refer in refers) {
         refer.imgData = nil;
@@ -228,18 +167,13 @@
 - (void)viewDidUnload {
     [self setCollectionView:nil];
     [refers removeAllObjects];
-    [self.imageDownloadsInProgress removeAllObjects];
     refers = nil;
-    _iconCache = nil;
     [super viewDidUnload];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    if (self.imageDownloadsInProgress != nil) {
-        NSArray *allDownloads = [self.imageDownloadsInProgress allValues];
-        [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    }
+
 }
 
 // 返回headview或footview
@@ -255,7 +189,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];

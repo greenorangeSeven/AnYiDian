@@ -9,6 +9,7 @@
 #import "IntegralView.h"
 #import "IntegralCell.h"
 #import "Integral.h"
+#import "IntegralMarketView.h"
 
 @interface IntegralView ()
 {
@@ -23,10 +24,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    userInfo = [[UserModel Instance] getUserInfo];
+    self.title = @"我的积分";
     
-    self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.frameView.frame.size.height);
-    seleteArray = [[NSMutableArray alloc] init];
+    userInfo = [[UserModel Instance] getUserInfo];
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -44,36 +44,37 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
     integrals = [[NSMutableArray alloc] initWithCapacity:40];
+    
+    self.totalLb.text = [NSString stringWithFormat:@"总积分:%@", self.integral];
+    
+    [self.exchangeBtn.layer setCornerRadius:5.0f];
+    
     [self refreshIntegralData];
+}
+
+- (IBAction)exchangeAction:(id)sender {
+    IntegralMarketView *exchange = [[IntegralMarketView alloc] init];
+    [self.navigationController pushViewController:exchange animated:YES];
 }
 
 - (void)refreshIntegralData
 {
-    //生成获取物业物品URL
-    NSMutableDictionary *param2 = [[NSMutableDictionary alloc] init];
-    [param2 setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
-    NSString *findExpressinInfoByPageUrl2 = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_peripheralShop] params:param2];
-    
-    
+//    //生成获取物业物品URL
+//    NSMutableDictionary *param2 = [[NSMutableDictionary alloc] init];
+//    [param2 setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
+//    NSString *findExpressinInfoByPageUrl2 = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findIntegralLogByPage] params:param2];
     //生成获取物业物品URL
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setValue:userInfo.regUserId forKey:@"regUserId"];
     [param setValue:@"1" forKey:@"pageNumbers"];
     [param setValue:@"40" forKey:@"countPerPages"];
-    [param setValue:@"0" forKey:@"isHide"];
-    NSString *findExpressinInfoByPageUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findIntegral] params:param];
+    NSString *findExpressinInfoByPageUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findIntegralLogByPage] params:param];
     [[AFOSCClient sharedClient]getPath:findExpressinInfoByPageUrl parameters:Nil
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                    @try {
-                                       NSData *data = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
-                                       NSError *error;
-                                       NSDictionary *billJsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-                                       NSDictionary *totalMap = [[billJsonDic objectForKey:@"data"] objectForKey:@"totalMap"];
-                                       int total = [[totalMap objectForKey:@"total_integral"] intValue];
-                                       self.totalLb.text = [NSString stringWithFormat:@"总积分:%d", total];
-                                       
                                        [integrals removeAllObjects];
                                        integrals = [Tool readJsonStrToIntegralArray:operation.responseString];
+                                       
                                        [self.tableView reloadData];
                                        [self doneLoadingTableViewData];
                                    }
@@ -135,7 +136,7 @@
         }
         int row = [indexPath row];
         Integral *integral = [integrals objectAtIndex:row];
-        cell.contentLb.text = integral.content;
+        cell.contentLb.text = integral.remark;
         cell.timeLb.text = integral.starttime;
         if(integral.integral > 0)
         {

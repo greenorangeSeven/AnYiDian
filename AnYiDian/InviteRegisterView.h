@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface InviteRegisterView : UIViewController<UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate>
+@interface InviteRegisterView : UIViewController<UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate,UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UITextField *mobileTf;

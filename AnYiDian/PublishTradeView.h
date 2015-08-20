@@ -10,12 +10,15 @@
 
 @interface PublishTradeView : UIViewController<UIActionSheetDelegate, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate>
 
+@property (weak, nonatomic) NSString *typeId;
 @property (weak, nonatomic) UIView *parentView;
 @property (weak, nonatomic) UIImage *cameraImage;
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UITextField *titleTf;
+@property (weak, nonatomic) IBOutlet UILabel *priceLb;
 @property (weak, nonatomic) IBOutlet UITextField *priceTf;
+@property (weak, nonatomic) IBOutlet UITextField *areaTf;
 @property (weak, nonatomic) IBOutlet UITextView *contentTv;
 @property (weak, nonatomic) IBOutlet UITextField *phoneTf;
 @property (weak, nonatomic) IBOutlet UIImageView *cameraIv;

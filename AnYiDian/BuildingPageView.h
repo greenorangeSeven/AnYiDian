@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BuildingPageView : UIViewController
+@interface BuildingPageView : UIViewController<UITableViewDataSource, UITableViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UIView *headerView;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (weak, nonatomic) IBOutlet UIView *marketingView;
+@property (weak, nonatomic) IBOutlet UIView *preferentialView;
 
 @end

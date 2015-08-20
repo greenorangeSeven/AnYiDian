@@ -18,13 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = @"邀请家人";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = @"邀请家人";
     
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle: @"发送" style:UIBarButtonItemStyleBordered target:self action:@selector(sendAction:)];
     self.navigationItem.rightBarButtonItem = rightBtn;

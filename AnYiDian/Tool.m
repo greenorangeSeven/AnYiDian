@@ -7,6 +7,11 @@
 //
 
 #import "Tool.h"
+#import "MainPageView.h"
+#import "PropertyPageView.h"
+#import "BuildingPageView.h"
+#import "CircleOfFriendsView.h"
+#import "GrouponClassView.h"
 
 @implementation Tool
 
@@ -104,7 +109,7 @@
 
 + (UIColor *)getColorForMain
 {
-    return [UIColor colorWithRed:35.0/255.0 green:162.0/255.0 blue:95.0/255.0 alpha:1.0];
+    return [UIColor colorWithRed:226.0/255.0 green:111.0/255.0 blue:41.0/255.0 alpha:1.0];
 }
 
 + (void)clearWebViewBackground:(UIWebView *)webView
@@ -445,6 +450,21 @@
     return dbPath;
 }
 
+//过滤HTML标签
++ (NSString *)flattenHTML:(NSString *)html {
+    NSScanner *theScanner;
+    NSString *text = nil;
+    theScanner = [NSScanner scannerWithString:html];
+    while ([theScanner isAtEnd] == NO) {
+        [theScanner scanUpToString:@"<" intoString:NULL] ;
+        [theScanner scanUpToString:@">" intoString:&text] ;
+        html = [html stringByReplacingOccurrencesOfString:
+                [NSString stringWithFormat:@"%@>", text]
+                                               withString:@""];
+    }
+    return html;
+}
+
 //平台接口生成验签
 + (NSDictionary *)parseQueryString:(NSString *)query {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:6];
@@ -558,6 +578,52 @@
     } else {
         return nil;
     }
+}
+
++ (void)gotoTabbar:(UIWindow *)window
+{
+    MainPageView *mainPage = [[MainPageView alloc] initWithNibName:@"MainPageView" bundle:nil];
+    mainPage.tabBarItem.image = [UIImage imageNamed:@"tab_main"];
+    mainPage.tabBarItem.title = @"首页";
+    UINavigationController *mainPageNav = [[UINavigationController alloc] initWithRootViewController:mainPage];
+    
+    //房产
+    BuildingPageView *buildPage = [[BuildingPageView alloc] initWithNibName:@"BuildingPageView" bundle:nil];
+    buildPage.tabBarItem.image = [UIImage imageNamed:@"tab_fc"];
+    buildPage.tabBarItem.title = @"房产";
+    UINavigationController *buildPageNav = [[UINavigationController alloc] initWithRootViewController:buildPage];
+    
+    //物业
+    PropertyPageView *proPage = [[PropertyPageView alloc] initWithNibName:@"PropertyPageView" bundle:nil];
+    proPage.tabBarItem.image = [UIImage imageNamed:@"tab_wy"];
+    proPage.tabBarItem.title = @"物业";
+    UINavigationController *proPageNav = [[UINavigationController alloc] initWithRootViewController:proPage];
+    
+    //朋友圈
+    CircleOfFriendsView *friendsPage = [[CircleOfFriendsView alloc] initWithNibName:@"CircleOfFriendsView" bundle:nil];
+    friendsPage.tabBarItem.image = [UIImage imageNamed:@"tab_py"];
+    friendsPage.tabBarItem.title = @"朋友圈";
+    UINavigationController *friendsPageNav = [[UINavigationController alloc] initWithRootViewController:friendsPage];
+    
+    //超市
+    GrouponClassView *supermarketPage = [[GrouponClassView alloc] initWithNibName:@"GrouponClassView" bundle:nil];
+    supermarketPage.tabBarItem.image = [UIImage imageNamed:@"tab_cs"];
+    supermarketPage.tabBarItem.title = @"超市";
+    UINavigationController *supermarkePageNav = [[UINavigationController alloc] initWithRootViewController:supermarketPage];
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    tabBarController.viewControllers = [NSArray arrayWithObjects:
+                                        mainPageNav,
+                                        buildPageNav,
+                                        proPageNav,
+                                        supermarkePageNav,
+                                        friendsPageNav,
+                                        nil];
+    [[tabBarController tabBar] setSelectedImageTintColor:[Tool getColorForMain]];
+    [[tabBarController tabBar] setBackgroundImage:[UIImage imageNamed:@"tabbar_bg"]];
+    
+    window.rootViewController = tabBarController;
+    [window makeKeyAndVisible];
 }
 
 //解析登陆JSON
@@ -1382,7 +1448,35 @@
     }
     NSString *state = [[tradeJsonDic objectForKey:@"header"] objectForKey:@"state"];
     if ([state isEqualToString:@"0000"] == YES) {
-        NSArray *tradeArrayJson = [[tradeJsonDic objectForKey:@"data"] objectForKey:@"resultsList"];
+        NSArray *data = [tradeJsonDic objectForKey:@"data"];
+        if (data.count > 0) {
+            NSArray *tradeArrayJson = [[tradeJsonDic objectForKey:@"data"] objectForKey:@"resultsList"];
+            NSMutableArray *tradeArray = [RMMapper mutableArrayOfClass:[Trade class] fromArrayOfDictionary:tradeArrayJson];
+            return tradeArray;
+        }
+        else
+        {
+            return nil;
+        }
+    }
+    else
+    {
+        return nil;
+    }
+}
+
+//解析交易买卖JSON
++ (NSMutableArray *)readJsonStrToTradeTopArray:(NSString *)str
+{
+    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error;
+    NSDictionary *tradeJsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    if ( tradeJsonDic == nil || [tradeJsonDic count] <= 0) {
+        return nil;
+    }
+    NSString *state = [[tradeJsonDic objectForKey:@"header"] objectForKey:@"state"];
+    if ([state isEqualToString:@"0000"] == YES) {
+        NSArray *tradeArrayJson = [tradeJsonDic objectForKey:@"data"];
         NSMutableArray *tradeArray = [RMMapper mutableArrayOfClass:[Trade class] fromArrayOfDictionary:tradeArrayJson];
         return tradeArray;
     }
@@ -1426,6 +1520,31 @@
     if ([state isEqualToString:@"0000"] == YES) {
         NSArray *billArrayJson = [[billJsonDic objectForKey:@"data"] objectForKey:@"resultsList"];
         NSMutableArray *billArray = [RMMapper mutableArrayOfClass:[Bill class] fromArrayOfDictionary:billArrayJson];
+        return billArray;
+    }
+    else
+    {
+        return nil;
+    }
+}
+
+//解析贵州账单列表JSON
++ (NSMutableArray *)readJsonStrToGuizhouBillArray:(NSString *)str
+{
+    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error;
+    NSDictionary *billJsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    if ( billJsonDic == nil || [billJsonDic count] <= 0) {
+        return nil;
+    }
+    NSString *state = [[billJsonDic objectForKey:@"header"] objectForKey:@"state"];
+    if ([state isEqualToString:@"0000"] == YES) {
+        NSArray *billArrayJson = [billJsonDic objectForKey:@"data"];
+        NSMutableArray *billArray = [RMMapper mutableArrayOfClass:[Bill class] fromArrayOfDictionary:billArrayJson];
+        for(Bill *b in billArray){
+            NSString *replace = [b.month stringByReplacingOccurrencesOfString:@"." withString:@"年"];
+            b.monthStr = [NSString stringWithFormat:@"%@月", replace];
+        }
         return billArray;
     }
     else
@@ -1567,6 +1686,30 @@
             item.starttime = [self TimestampToDateStr:[item.starttimeStamp stringValue] andFormatterStr:@"yyyy-MM-dd"];
         }
         return orderArray;
+    }
+    else
+    {
+        return nil;
+    }
+}
+
+//解析积分列表JSON
++ (NSMutableArray *)readJsonStrToIntegralArray:(NSString *)str
+{
+    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error;
+    NSDictionary *integralJsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    if ( integralJsonDic == nil || [integralJsonDic count] <= 0) {
+        return nil;
+    }
+    NSString *state = [[integralJsonDic objectForKey:@"header"] objectForKey:@"state"];
+    if ([state isEqualToString:@"0000"] == YES) {
+        NSArray *integralArrayJson = [[integralJsonDic objectForKey:@"data"] objectForKey:@"resultsList"];
+        NSMutableArray *integralArray = [RMMapper mutableArrayOfClass:[Integral class] fromArrayOfDictionary:integralArrayJson];
+        for (Integral *i in integralArray) {
+            i.starttime = [self TimestampToDateStr:[i.starttimeStamp stringValue] andFormatterStr:@"yyyy年MM月dd日 HH:mm"];
+        }
+        return integralArray;
     }
     else
     {

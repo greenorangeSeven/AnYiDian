@@ -10,7 +10,7 @@
 
 @interface City : NSObject
 
-@property (nonatomic, retain) NSNumber *cityId;
+@property (nonatomic, retain) NSString *cityId;
 @property (nonatomic, retain) NSString *cityName;
 
 @property (nonatomic, retain) NSArray *communityList;

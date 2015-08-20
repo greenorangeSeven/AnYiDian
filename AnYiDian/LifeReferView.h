@@ -7,19 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TQImageCache.h"
 
-@interface LifeReferView : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, IconDownloaderDelegate>
+@interface LifeReferView : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 {
     NSMutableArray *refers;
-    TQImageCache * _iconCache;
     MBProgressHUD *hud;
 }
 
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-
-//异步加载图片专用
-@property (nonatomic, retain) NSMutableDictionary *imageDownloadsInProgress;
-- (void)startIconDownload:(ImgRecord *)imgRecord forIndexPath:(NSIndexPath *)indexPath;
 
 @end

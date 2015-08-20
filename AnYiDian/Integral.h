@@ -10,9 +10,10 @@
 
 @interface Integral : NSObject
 
-@property (nonatomic, retain) NSString *integralId;
-@property (nonatomic, retain) NSString *content;
+@property (nonatomic, retain) NSString *integralTypeId;
+@property (nonatomic, retain) NSString *remark;
 @property int integral;
+@property int balance;
 @property (nonatomic, retain) NSNumber *starttimeStamp;
 @property (nonatomic, retain) NSString *starttime;
 

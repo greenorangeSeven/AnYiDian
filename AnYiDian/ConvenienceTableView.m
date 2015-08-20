@@ -10,6 +10,7 @@
 #import "ConvenienceCell.h"
 #import "ShopInfo.h"
 #import "ConvenienceDetailView.h"
+#import "UIImageView+WebCache.h"
 
 @interface ConvenienceTableView ()
 
@@ -20,13 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    titleLabel.text = self.type.shopTypeName;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [Tool getColorForMain];
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    self.navigationItem.titleView = titleLabel;
+    self.title = self.type.shopTypeName;
     
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     
@@ -56,7 +51,6 @@
     }
     // 开始定位
     [self.locationManager startUpdatingLocation];
-    
     
     self.tableView.backgroundColor = [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:1.0];
     //    设置无分割线
@@ -183,7 +177,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setTintColor:[Tool getColorForMain]];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
@@ -323,7 +316,7 @@
 //列表数据渲染
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int row = [indexPath row];
+    NSInteger row = [indexPath row];
     if ([shops count] > 0) {
         if (row < [shops count])
         {
@@ -344,13 +337,15 @@
             
             if(shop.distance > 0)
             {
-                cell.distanceView.hidden = NO;
-                cell.distanceLb.text = [NSString stringWithFormat:@"%.2f千米", shop.distance];
+                cell.locationBtn.hidden = NO;
+                [cell.locationBtn setTitle:[NSString stringWithFormat:@" %.2f千米", shop.distance] forState:UIControlStateNormal];
             }
             else
             {
-                cell.distanceView.hidden = YES;
+                cell.locationBtn.hidden = YES;
             }
+            
+            [cell.imageIv sd_setImageWithURL:[NSURL URLWithString:shop.imgUrlFull] placeholderImage:[UIImage imageNamed:@"placeHoder"]];
             
             return cell;
         }
