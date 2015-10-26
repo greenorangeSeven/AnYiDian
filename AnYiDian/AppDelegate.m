@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "CheckNetwork.h"
 #import "LoginView.h"
+#import "CommDetailView.h"
 
 #import "XGPush.h"
 #import "XGSetting.h"
@@ -88,6 +89,54 @@ BMKMapManager* _mapManager;
     NSString *directory = [NSString stringWithFormat:@"%@/cfg", [paths objectAtIndex:0]];
     NSURL *dbURLPath = [NSURL fileURLWithPath:directory];
     [self addSkipBackupAttributeToItemAtURL:dbURLPath];
+    
+    //集成信鸽start
+    [XGPush startApp:2200152378 appKey:@"IGTA36EN683M"];
+    
+    //注销之后需要再次注册前的准备
+    void (^successCallback)(void) = ^(void){
+        //如果变成需要注册状态
+        if(![XGPush isUnRegisterStatus])
+        {
+            //iOS8注册push方法
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= _IPHONE80_
+            
+            float sysVer = [[[UIDevice currentDevice] systemVersion] floatValue];
+            if(sysVer < 8){
+                [self registerPush];
+            }
+            else{
+                [self registerPushForIOS8];
+            }
+#else
+            //iOS8之前注册push方法
+            //注册Push服务，注册后才能收到推送
+            [self registerPush];
+#endif
+        }
+    };
+    [XGPush initForReregister:successCallback];
+    
+    //推送反馈(app不在前台运行时，点击推送激活时)
+    [XGPush handleLaunching:launchOptions];
+    
+    //推送反馈回调版本示例
+    void (^successBlock)(void) = ^(void){
+        //成功之后的处理
+        NSLog(@"[XGPush]handleLaunching's successBlock");
+        [self pushNotificationHandle];
+    };
+    
+    void (^errorBlock)(void) = ^(void){
+        //失败之后的处理
+        //        NSLog(@"[XGPush]handleLaunching's errorBlock");
+    };
+    //清除所有通知(包含本地通知)
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
+    [XGPush handleLaunching:launchOptions successCallback:successBlock errorCallback:errorBlock];
+    //信鸽END
+    
     return YES;
 }
 
@@ -317,17 +366,17 @@ BMKMapManager* _mapManager;
     //清除所有通知(包含本地通知)
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     NSString *type = [self.pushInfo  objectForKey:@"type"];
-//    if ([type isEqualToString:@"notice"] == YES) {
-//        NSString *pushDetailHtm = [NSString stringWithFormat:@"%@%@", api_base_url, [self.pushInfo  objectForKey:@"url"]];
-//        CommDetailView *detailView = [[CommDetailView alloc] initWithNibName:@"CommDetailView" bundle:nil];
-//        detailView.present = @"present";
-//        detailView.titleStr = @"物业通知";
-//        detailView.urlStr = pushDetailHtm;
-//        UINavigationController *detailViewNav = [[UINavigationController alloc] initWithRootViewController:detailView];
-//        [self.window.rootViewController presentViewController:detailViewNav animated:YES completion:^{
-//            _isForeground = NO;
-//        }];
-//    }
+    if ([type isEqualToString:@"notice"] == YES) {
+        NSString *pushDetailHtm = [NSString stringWithFormat:@"%@%@", api_base_url, [self.pushInfo  objectForKey:@"url"]];
+        CommDetailView *detailView = [[CommDetailView alloc] initWithNibName:@"CommDetailView" bundle:nil];
+        detailView.present = @"present";
+        detailView.titleStr = @"物业通知";
+        detailView.urlStr = pushDetailHtm;
+        UINavigationController *detailViewNav = [[UINavigationController alloc] initWithRootViewController:detailView];
+        [self.window.rootViewController presentViewController:detailViewNav animated:YES completion:^{
+            _isForeground = NO;
+        }];
+    }
 //    else if ([type isEqualToString:@"express"] == YES)
 //    {
 //        ExpressView *expressView = [[ExpressView alloc] initWithNibName:@"ExpressView" bundle:nil];

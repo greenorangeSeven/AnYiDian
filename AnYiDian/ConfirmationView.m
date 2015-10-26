@@ -38,7 +38,7 @@
     userInfo = [[UserModel Instance] getUserInfo];
     self.recipientsTf.text = userInfo.regUserName;
     self.telphoneTf.text = userInfo.mobileNo;
-    self.addressTv.text = [NSString stringWithFormat:@"%@%@%@%@", userInfo.defaultUserHouse.cellName, userInfo.defaultUserHouse.buildingName, userInfo.defaultUserHouse.unitName,userInfo.defaultUserHouse.numberName];
+    self.addressTv.text = [NSString stringWithFormat:@"%@%@%@", userInfo.defaultUserHouse.cellName, userInfo.defaultUserHouse.buildingName, userInfo.defaultUserHouse.numberName];
     [self refreshTotal];
     
     self.tableView.dataSource = self;

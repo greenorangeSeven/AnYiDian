@@ -124,6 +124,22 @@
         [[AFOSCClient sharedClient]getPath:getBillListUrl parameters:Nil
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                        
+                                       NSData *data = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                                       NSError *error;
+                                       NSDictionary *billJsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                       if ( billJsonDic == nil || [billJsonDic count] <= 0) {
+                                           [Tool showCustomHUD:@"系统异常" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
+                                       }
+                                       NSString *state = [[billJsonDic objectForKey:@"header"] objectForKey:@"state"];
+                                       if ([state isEqualToString:@"0000"] == NO) {
+                                           UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"错误提示"
+                                                                                        message:[[billJsonDic objectForKey:@"header"] objectForKey:@"msg"]
+                                                                                       delegate:nil
+                                                                              cancelButtonTitle:@"确定"
+                                                                              otherButtonTitles:nil];
+                                           [av show];
+                                       }
+                                       
                                        NSMutableArray *feeNews = [Tool readJsonStrToGuizhouBillArray:operation.responseString];
                                        isLoading = NO;
                                        if (!noRefresh) {

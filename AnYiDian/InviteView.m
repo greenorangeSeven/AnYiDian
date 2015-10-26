@@ -91,10 +91,16 @@
     }
     else
     {
-        [Tool showCustomHUD:@"邀请码发送成功" andView:self.parentView  andImage:@"37x-Failure.png" andAfterDelay:2];
-        [self.navigationController popViewControllerAnimated:YES];
+        [Tool showCustomHUD:@"邀请码发送成功" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:2];
+        //        [self.navigationController popViewControllerAnimated:YES];
+        [self performSelector:@selector(back) withObject:self afterDelay:1.2f];
     }
     self.navigationItem.rightBarButtonItem.enabled = YES;
+}
+
+- (void)back
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

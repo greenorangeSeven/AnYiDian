@@ -39,8 +39,8 @@
 #define Appkey @"10000001"
 #define AppSecret @"Hr54hiz7"
 //
-//#define api_base_url @"http://192.168.1.110:8080/guizhou_api/"
-#define api_base_url @"http://112.126.66.58:80/guizhou_api/"
+//#define api_base_url @"http://192.168.1.107:8080/guizhou_api/"
+#define api_base_url @"http://121.41.13.253:80/guizhou_api/"
 //登录接口
 #define api_login @"regUser/login.htm"
 //找回密码

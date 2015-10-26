@@ -10,6 +10,8 @@
 
 @interface MainPageView : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIImageView *adIv;
+
 @property (weak, nonatomic) IBOutlet UIView *newsHouseView;
 @property (weak, nonatomic) IBOutlet UIImageView *newsHouseImg;
 @property (weak, nonatomic) IBOutlet UILabel *newsHouseNameLb;

@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *marketingMobileTf;
 @property (weak, nonatomic) IBOutlet UITextField *marketedNameTf;
 @property (weak, nonatomic) IBOutlet UITextField *marketedMobileTf;
+@property (weak, nonatomic) IBOutlet UIImageView *adIv;
 
 @property (weak, nonatomic) IBOutlet UIButton *submitBtn;
 - (IBAction)submitAction:(id)sender;

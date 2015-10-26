@@ -117,7 +117,7 @@
 - (void)updatePayedTable
 {
     [Tool showCustomHUD:@"支付成功" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:2];
-    [[NSNotificationCenter defaultCenter] postNotificationName:Notification_RefreshAddVolunteerView object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:Notification_RefreshPayFeeTableView object:nil];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

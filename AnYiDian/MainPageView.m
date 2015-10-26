@@ -212,7 +212,7 @@
         detailView.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:detailView animated:YES];
     };
-    [self.view addSubview:adView];
+    [self.adIv addSubview:adView];
 }
 
 - (void)didReceiveMemoryWarning {
