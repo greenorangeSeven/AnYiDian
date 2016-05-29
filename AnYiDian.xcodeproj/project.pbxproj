@@ -71,6 +71,10 @@
 		1454072D1B7F7D67000493BB /* ChangeHouseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 145407281B7F7D67000493BB /* ChangeHouseView.xib */; };
 		1454072E1B7F7D67000493BB /* ChangeHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1454072A1B7F7D67000493BB /* ChangeHouseCell.m */; };
 		1454072F1B7F7D67000493BB /* ChangeHouseCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1454072B1B7F7D67000493BB /* ChangeHouseCell.xib */; };
+		1455F3621CB362B1009FA41E /* PayFeeDetailNewsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1455F3601CB362B1009FA41E /* PayFeeDetailNewsView.m */; };
+		1455F3631CB362B1009FA41E /* PayFeeDetailNewsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1455F3611CB362B1009FA41E /* PayFeeDetailNewsView.xib */; };
+		1455F3671CB369D6009FA41E /* PayFeeDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1455F3651CB369D6009FA41E /* PayFeeDetailCell.m */; };
+		1455F3681CB369D6009FA41E /* PayFeeDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1455F3661CB369D6009FA41E /* PayFeeDetailCell.xib */; };
 		14577B541B6EF6A800D1A4B9 /* ModifyUserInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14577B521B6EF6A800D1A4B9 /* ModifyUserInfoView.m */; };
 		14577B551B6EF6A800D1A4B9 /* ModifyUserInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14577B531B6EF6A800D1A4B9 /* ModifyUserInfoView.xib */; };
 		145AE07A1B61EAD4000F34DB /* CallServiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 145AE0721B61EAD4000F34DB /* CallServiceView.m */; };
@@ -114,6 +118,8 @@
 		147A0F3E1B6B4C8C00C8CAC4 /* IntegralCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 147A0F3A1B6B4C8C00C8CAC4 /* IntegralCell.m */; };
 		147A0F3F1B6B4C8C00C8CAC4 /* IntegralCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 147A0F3B1B6B4C8C00C8CAC4 /* IntegralCell.xib */; };
 		147A0F431B6B4E5000C8CAC4 /* Integral.m in Sources */ = {isa = PBXBuildFile; fileRef = 147A0F421B6B4E5000C8CAC4 /* Integral.m */; };
+		147D20801CFA7F5B00F4C568 /* OrderCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 147D207E1CFA7F5B00F4C568 /* OrderCommentView.m */; };
+		147D20811CFA7F5B00F4C568 /* OrderCommentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 147D207F1CFA7F5B00F4C568 /* OrderCommentView.xib */; };
 		1484656D1B76E8030031F6EB /* MyOrderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 148465651B76E8030031F6EB /* MyOrderView.m */; };
 		1484656E1B76E8030031F6EB /* MyOrderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148465661B76E8030031F6EB /* MyOrderView.xib */; };
 		1484656F1B76E8030031F6EB /* MyOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 148465681B76E8030031F6EB /* MyOrderCell.m */; };
@@ -136,6 +142,7 @@
 		14853D8A1B5E8BD600466CEA /* VolunteerNewsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14853D881B5E8BD600466CEA /* VolunteerNewsView.xib */; };
 		14853D8E1B5E91A300466CEA /* VolunteerNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14853D8C1B5E91A300466CEA /* VolunteerNewsCell.m */; };
 		14853D8F1B5E91A300466CEA /* VolunteerNewsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14853D8D1B5E91A300466CEA /* VolunteerNewsCell.xib */; };
+		148C670A1CB4F0C5005F9409 /* NewsCountAll.m in Sources */ = {isa = PBXBuildFile; fileRef = 148C67091CB4F0C5005F9409 /* NewsCountAll.m */; };
 		149299B01B660D7100438051 /* MarketingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 149299AE1B660D7100438051 /* MarketingView.m */; };
 		149299B11B660D7100438051 /* MarketingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 149299AF1B660D7100438051 /* MarketingView.xib */; };
 		149299B51B661B3D00438051 /* Estate.m in Sources */ = {isa = PBXBuildFile; fileRef = 149299B41B661B3D00438051 /* Estate.m */; };
@@ -173,6 +180,8 @@
 		14B9300C1B58DB2F0084FF9A /* PropertyNewsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14B9300A1B58DB2F0084FF9A /* PropertyNewsView.xib */; };
 		14B930101B58E07E0084FF9A /* PropertyNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B9300E1B58E07E0084FF9A /* PropertyNewsCell.m */; };
 		14B930111B58E07E0084FF9A /* PropertyNewsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14B9300F1B58E07E0084FF9A /* PropertyNewsCell.xib */; };
+		14BD16981CFB312A006E5C8B /* AddHouseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BD16961CFB312A006E5C8B /* AddHouseView.m */; };
+		14BD16991CFB312A006E5C8B /* AddHouseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BD16971CFB312A006E5C8B /* AddHouseView.xib */; };
 		14D45ED11B5504BF007FC69E /* SettingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D45ED01B5504BF007FC69E /* SettingModel.m */; };
 		14D45ED71B55566D007FC69E /* BuildingPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D45ED51B55566D007FC69E /* BuildingPageView.m */; };
 		14D45ED81B55566D007FC69E /* BuildingPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14D45ED61B55566D007FC69E /* BuildingPageView.xib */; };
@@ -578,6 +587,12 @@
 		145407291B7F7D67000493BB /* ChangeHouseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeHouseCell.h; sourceTree = "<group>"; };
 		1454072A1B7F7D67000493BB /* ChangeHouseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeHouseCell.m; sourceTree = "<group>"; };
 		1454072B1B7F7D67000493BB /* ChangeHouseCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangeHouseCell.xib; sourceTree = "<group>"; };
+		1455F35F1CB362B1009FA41E /* PayFeeDetailNewsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayFeeDetailNewsView.h; sourceTree = "<group>"; };
+		1455F3601CB362B1009FA41E /* PayFeeDetailNewsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayFeeDetailNewsView.m; sourceTree = "<group>"; };
+		1455F3611CB362B1009FA41E /* PayFeeDetailNewsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PayFeeDetailNewsView.xib; sourceTree = "<group>"; };
+		1455F3641CB369D6009FA41E /* PayFeeDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayFeeDetailCell.h; sourceTree = "<group>"; };
+		1455F3651CB369D6009FA41E /* PayFeeDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayFeeDetailCell.m; sourceTree = "<group>"; };
+		1455F3661CB369D6009FA41E /* PayFeeDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PayFeeDetailCell.xib; sourceTree = "<group>"; };
 		14577B511B6EF6A800D1A4B9 /* ModifyUserInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyUserInfoView.h; sourceTree = "<group>"; };
 		14577B521B6EF6A800D1A4B9 /* ModifyUserInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyUserInfoView.m; sourceTree = "<group>"; };
 		14577B531B6EF6A800D1A4B9 /* ModifyUserInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ModifyUserInfoView.xib; sourceTree = "<group>"; };
@@ -644,6 +659,9 @@
 		147A0F3B1B6B4C8C00C8CAC4 /* IntegralCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IntegralCell.xib; sourceTree = "<group>"; };
 		147A0F411B6B4E5000C8CAC4 /* Integral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Integral.h; sourceTree = "<group>"; };
 		147A0F421B6B4E5000C8CAC4 /* Integral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Integral.m; sourceTree = "<group>"; };
+		147D207D1CFA7F5B00F4C568 /* OrderCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderCommentView.h; sourceTree = "<group>"; };
+		147D207E1CFA7F5B00F4C568 /* OrderCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderCommentView.m; sourceTree = "<group>"; };
+		147D207F1CFA7F5B00F4C568 /* OrderCommentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OrderCommentView.xib; sourceTree = "<group>"; };
 		148465641B76E8030031F6EB /* MyOrderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOrderView.h; sourceTree = "<group>"; };
 		148465651B76E8030031F6EB /* MyOrderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOrderView.m; sourceTree = "<group>"; };
 		148465661B76E8030031F6EB /* MyOrderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyOrderView.xib; sourceTree = "<group>"; };
@@ -677,6 +695,8 @@
 		14853D8B1B5E91A300466CEA /* VolunteerNewsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VolunteerNewsCell.h; sourceTree = "<group>"; };
 		14853D8C1B5E91A300466CEA /* VolunteerNewsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VolunteerNewsCell.m; sourceTree = "<group>"; };
 		14853D8D1B5E91A300466CEA /* VolunteerNewsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VolunteerNewsCell.xib; sourceTree = "<group>"; };
+		148C67081CB4F0C5005F9409 /* NewsCountAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsCountAll.h; sourceTree = "<group>"; };
+		148C67091CB4F0C5005F9409 /* NewsCountAll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsCountAll.m; sourceTree = "<group>"; };
 		149299AD1B660D7100438051 /* MarketingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarketingView.h; sourceTree = "<group>"; };
 		149299AE1B660D7100438051 /* MarketingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarketingView.m; sourceTree = "<group>"; };
 		149299AF1B660D7100438051 /* MarketingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MarketingView.xib; sourceTree = "<group>"; };
@@ -733,6 +753,9 @@
 		14B9300D1B58E07E0084FF9A /* PropertyNewsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyNewsCell.h; sourceTree = "<group>"; };
 		14B9300E1B58E07E0084FF9A /* PropertyNewsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyNewsCell.m; sourceTree = "<group>"; };
 		14B9300F1B58E07E0084FF9A /* PropertyNewsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PropertyNewsCell.xib; sourceTree = "<group>"; };
+		14BD16951CFB312A006E5C8B /* AddHouseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddHouseView.h; sourceTree = "<group>"; };
+		14BD16961CFB312A006E5C8B /* AddHouseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddHouseView.m; sourceTree = "<group>"; };
+		14BD16971CFB312A006E5C8B /* AddHouseView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddHouseView.xib; sourceTree = "<group>"; };
 		14D45ECF1B5504BF007FC69E /* SettingModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingModel.h; sourceTree = "<group>"; };
 		14D45ED01B5504BF007FC69E /* SettingModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingModel.m; sourceTree = "<group>"; };
 		14D45ED41B55566D007FC69E /* BuildingPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildingPageView.h; sourceTree = "<group>"; };
@@ -1632,6 +1655,9 @@
 				1484656A1B76E8030031F6EB /* OrderCommodityCell.h */,
 				1484656B1B76E8030031F6EB /* OrderCommodityCell.m */,
 				1484656C1B76E8030031F6EB /* OrderCommodityCell.xib */,
+				147D207D1CFA7F5B00F4C568 /* OrderCommentView.h */,
+				147D207E1CFA7F5B00F4C568 /* OrderCommentView.m */,
+				147D207F1CFA7F5B00F4C568 /* OrderCommentView.xib */,
 			);
 			name = MyOrder;
 			sourceTree = "<group>";
@@ -1837,6 +1863,9 @@
 				145407291B7F7D67000493BB /* ChangeHouseCell.h */,
 				1454072A1B7F7D67000493BB /* ChangeHouseCell.m */,
 				1454072B1B7F7D67000493BB /* ChangeHouseCell.xib */,
+				14BD16951CFB312A006E5C8B /* AddHouseView.h */,
+				14BD16961CFB312A006E5C8B /* AddHouseView.m */,
+				14BD16971CFB312A006E5C8B /* AddHouseView.xib */,
 			);
 			name = MyPage;
 			sourceTree = "<group>";
@@ -1905,6 +1934,12 @@
 				14E2A0FA1B7C7032006F66EB /* PayFeeDetailView.h */,
 				14E2A0FB1B7C7032006F66EB /* PayFeeDetailView.m */,
 				14E2A0FC1B7C7032006F66EB /* PayFeeDetailView.xib */,
+				1455F35F1CB362B1009FA41E /* PayFeeDetailNewsView.h */,
+				1455F3601CB362B1009FA41E /* PayFeeDetailNewsView.m */,
+				1455F3611CB362B1009FA41E /* PayFeeDetailNewsView.xib */,
+				1455F3641CB369D6009FA41E /* PayFeeDetailCell.h */,
+				1455F3651CB369D6009FA41E /* PayFeeDetailCell.m */,
+				1455F3661CB369D6009FA41E /* PayFeeDetailCell.xib */,
 			);
 			name = PayFee;
 			sourceTree = "<group>";
@@ -2817,6 +2852,8 @@
 				14D45ED01B5504BF007FC69E /* SettingModel.m */,
 				14FF6FD91B4E59DC00455125 /* UserModel.h */,
 				14FF6FDA1B4E59DC00455125 /* UserModel.m */,
+				148C67081CB4F0C5005F9409 /* NewsCountAll.h */,
+				148C67091CB4F0C5005F9409 /* NewsCountAll.m */,
 				14FF6FDB1B4E59DC00455125 /* UserInfo.h */,
 				14FF6FDC1B4E59DC00455125 /* UserInfo.m */,
 				14FF6FDD1B4E59DC00455125 /* UserHouse.h */,
@@ -3095,6 +3132,7 @@
 				1454072F1B7F7D67000493BB /* ChangeHouseCell.xib in Resources */,
 				14FF6FBA1B4E58F000455125 /* cd_my_on.png in Resources */,
 				145FF0661B76E49F0070189F /* CommodityCell.xib in Resources */,
+				1455F3681CB369D6009FA41E /* PayFeeDetailCell.xib in Resources */,
 				14577B551B6EF6A800D1A4B9 /* ModifyUserInfoView.xib in Resources */,
 				14DEC8331B706330005891FC /* NewsHouseView.xib in Resources */,
 				14D45EE31B55EFE1007FC69E /* MyPageView.xib in Resources */,
@@ -3105,6 +3143,7 @@
 				1417BDEE1B53591800C0DCC8 /* LoginView.xib in Resources */,
 				145AE07F1B61EAD4000F34DB /* CallServiceReusable.xib in Resources */,
 				14257EB81B74934D005217E5 /* PopularityView.xib in Resources */,
+				1455F3631CB362B1009FA41E /* PayFeeDetailNewsView.xib in Resources */,
 				14E2A0F41B7C2F92006F66EB /* PayFeeTableView.xib in Resources */,
 				1417BDFE1B538ED700C0DCC8 /* RegisterStep3View.xib in Resources */,
 				14FF6FB91B4E58F000455125 /* cd_my_off@2x.png in Resources */,
@@ -3112,6 +3151,7 @@
 				14FF6FB41B4E58F000455125 /* cb_mono_off.png in Resources */,
 				145FF0701B76E49F0070189F /* ConfirmationView.xib in Resources */,
 				1454072D1B7F7D67000493BB /* ChangeHouseView.xib in Resources */,
+				147D20811CFA7F5B00F4C568 /* OrderCommentView.xib in Resources */,
 				14853D8A1B5E8BD600466CEA /* VolunteerNewsView.xib in Resources */,
 				14FF6FA91B4E58F000455125 /* cb_dark_off@2x.png in Resources */,
 				14B9300C1B58DB2F0084FF9A /* PropertyNewsView.xib in Resources */,
@@ -3164,6 +3204,7 @@
 				147031041B5CCD640009990F /* NoticeTableView.xib in Resources */,
 				1417BDFA1B538ED700C0DCC8 /* RegisterStep1View.xib in Resources */,
 				145407241B7F73D9000493BB /* InviteView.xib in Resources */,
+				14BD16991CFB312A006E5C8B /* AddHouseView.xib in Resources */,
 				14FF6FA51B4E58F000455125 /* cb_box_off@2x.png in Resources */,
 				1484656E1B76E8030031F6EB /* MyOrderView.xib in Resources */,
 				14FF6FB71B4E58F000455125 /* cb_mono_on@2x.png in Resources */,
@@ -3309,6 +3350,7 @@
 				14FF6F3E1B4E58F000455125 /* DataSigner.m in Sources */,
 				14FF6F671B4E58F000455125 /* NSString+URLEncoding.m in Sources */,
 				14FF6F881B4E58F000455125 /* PSTGridLayoutRow.m in Sources */,
+				14BD16981CFB312A006E5C8B /* AddHouseView.m in Sources */,
 				14FF6F9D1B4E58F000455125 /* NSString+STRegex.m in Sources */,
 				14FF6F2B1B4E58F000455125 /* NSData+CommonCrypto.m in Sources */,
 				14FF6F571B4E58F000455125 /* EGOImageButton.m in Sources */,
@@ -3373,6 +3415,7 @@
 				14FF704E1B4E59DD00455125 /* HouseNum.m in Sources */,
 				14FF6F8D1B4E58F000455125 /* NSData+ImageContentType.m in Sources */,
 				14DEC8481B70BC8B005891FC /* PublishTradeView.m in Sources */,
+				1455F3671CB369D6009FA41E /* PayFeeDetailCell.m in Sources */,
 				1417BE0D1B54015800C0DCC8 /* MainPageView.m in Sources */,
 				147A0F431B6B4E5000C8CAC4 /* Integral.m in Sources */,
 				14FF6F341B4E58F000455125 /* AFPropertyListRequestOperation.m in Sources */,
@@ -3425,6 +3468,7 @@
 				14FF705D1B4E59DD00455125 /* RepairResuleItem.m in Sources */,
 				14FF6F6F1B4E58F000455125 /* FMDatabaseQueue.m in Sources */,
 				14FF70541B4E59DD00455125 /* TopicFull.m in Sources */,
+				147D20801CFA7F5B00F4C568 /* OrderCommentView.m in Sources */,
 				14FF6F9B1B4E58F000455125 /* UIView+WebCacheOperation.m in Sources */,
 				1417BE221B54F68200C0DCC8 /* PropertyPageCell.m in Sources */,
 				14FF6F4A1B4E58F000455125 /* ASIDownloadCache.m in Sources */,
@@ -3455,10 +3499,12 @@
 				14FF6F811B4E58F000455125 /* PSTCollectionViewData.m in Sources */,
 				14FF6F521B4E58F000455125 /* ImgRecord.m in Sources */,
 				14257EBD1B74934D005217E5 /* CircleOfFriendsPublishView.m in Sources */,
+				1455F3621CB362B1009FA41E /* PayFeeDetailNewsView.m in Sources */,
 				14B930001B589A6D0084FF9A /* LifeReferView.m in Sources */,
 				14FF6FBE1B4E58F000455125 /* StrikeThroughLabel.m in Sources */,
 				1454072C1B7F7D67000493BB /* ChangeHouseView.m in Sources */,
 				14FF6F2D1B4E58F000455125 /* AFHTTPClient.m in Sources */,
+				148C670A1CB4F0C5005F9409 /* NewsCountAll.m in Sources */,
 				147030FA1B5CA19F0009990F /* PropertyNews.m in Sources */,
 				1416E5741B60C3CB00BC6AC2 /* AddVolunteerHeaderView.m in Sources */,
 				14DEC8321B706330005891FC /* NewsHouseView.m in Sources */,
@@ -3605,7 +3651,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Guizhou Anshun Yinju Property Management Co., Ltd. (52UK342V84)";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/alipay",
@@ -3629,7 +3676,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f8263fe1-9029-4612-aa73-923c44b5464e";
+				PROVISIONING_PROFILE = "61b3594b-8a0f-4fb4-901e-257343063f77";
 			};
 			name = Debug;
 		};
@@ -3638,7 +3685,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Guizhou Anshun Yinju Property Management Co., Ltd. (52UK342V84)";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/alipay",
@@ -3662,7 +3710,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f8263fe1-9029-4612-aa73-923c44b5464e";
+				PROVISIONING_PROFILE = "61b3594b-8a0f-4fb4-901e-257343063f77";
 			};
 			name = Release;
 		};
@@ -3670,7 +3718,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Guizhou Anshun Yinju Property Management Co., Ltd. (52UK342V84)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -3682,7 +3730,7 @@
 				INFOPLIST_FILE = AnYiDianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f8263fe1-9029-4612-aa73-923c44b5464e";
+				PROVISIONING_PROFILE = "61b3594b-8a0f-4fb4-901e-257343063f77";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnYiDian.app/AnYiDian";
 			};
 			name = Debug;
@@ -3691,7 +3739,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Guizhou Anshun Yinju Property Management Co., Ltd. (52UK342V84)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -3699,7 +3747,7 @@
 				INFOPLIST_FILE = AnYiDianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f8263fe1-9029-4612-aa73-923c44b5464e";
+				PROVISIONING_PROFILE = "61b3594b-8a0f-4fb4-901e-257343063f77";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnYiDian.app/AnYiDian";
 			};
 			name = Release;

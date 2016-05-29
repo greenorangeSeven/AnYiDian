@@ -24,7 +24,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"生活服务";
+    self.title = @"本地生活圈";
     
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     

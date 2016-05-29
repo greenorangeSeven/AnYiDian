@@ -13,6 +13,9 @@
 #import "CommDetailView.h"
 
 @interface NewsHouseView ()
+{
+    BOOL gNoRefresh;
+}
 
 @end
 
@@ -39,6 +42,7 @@
     
     self.tableView.tableFooterView = [[UIView alloc] init];
     
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -65,7 +69,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -87,7 +91,7 @@
                                        NSArray *array = [datas objectForKey:@"resultsList"];
                                        NSMutableArray *dataNews = [NSMutableArray arrayWithArray:[Tool readJsonToObjArray:array andObjClass:[Estate class]]];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -202,6 +206,7 @@
     if (row >= [estateData count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -248,6 +253,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -264,6 +270,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

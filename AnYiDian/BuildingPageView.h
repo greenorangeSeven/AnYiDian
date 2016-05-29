@@ -15,5 +15,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *marketingView;
 @property (weak, nonatomic) IBOutlet UIView *preferentialView;
+@property (weak, nonatomic) IBOutlet UIImageView *policyReddotIv;
 
 @end

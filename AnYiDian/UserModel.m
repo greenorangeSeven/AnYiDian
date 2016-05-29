@@ -155,4 +155,21 @@ static UserModel * instance = nil;
     }
 }
 
+-(void)saveNewsCountAll:(NewsCountAll *)newsCountAll
+{
+    self.newsCountAll = newsCountAll;
+    EGOCache *cache = [EGOCache globalCache];
+    [cache setObjectForSync:newsCountAll forKey:@"newscountall"];
+}
+
+-(NewsCountAll *)getNewsCountAll
+{
+    if(!self.newsCountAll)
+    {
+        EGOCache *cache = [EGOCache globalCache];
+        self.newsCountAll = (NewsCountAll *)[cache objectForKey:@"newscountall"];
+    }
+    return self.newsCountAll;
+}
+
 @end

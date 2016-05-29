@@ -46,6 +46,13 @@
     
     self.title = @"商品详情";
     
+    //适配iOS7uinavigationbar遮挡tableView的问题
+    if(IS_IOS7)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
+    
     UIButton *rBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 22, 22)];
     [rBtn addTarget:self action:@selector(addShopCarAction:) forControlEvents:UIControlEventTouchUpInside];
     [rBtn setImage:[UIImage imageNamed:@"shopcar"] forState:UIControlStateNormal];

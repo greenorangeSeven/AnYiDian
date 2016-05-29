@@ -147,7 +147,7 @@
                 UserHouse *userHouse = (UserHouse *)[userInfo.rhUserHouseList objectAtIndex:i];
                 if ([userHouse.userStateId intValue] == 1){
                     //                if (i == 0) {
-                    [userModel saveValue:[userHouse.userTypeId stringValue] ForKey:@"userTypeId"];
+                    [userModel saveValue:[NSString stringWithFormat:@"%d",userHouse.userTypeId] ForKey:@"userTypeId"];
                     [userModel saveValue:userHouse.userTypeName ForKey:@"userTypeName"];
                     [userModel saveValue:userHouse.numberName ForKey:@"numberName"];
                     [userModel saveValue:userHouse.buildingName ForKey:@"buildingName"];

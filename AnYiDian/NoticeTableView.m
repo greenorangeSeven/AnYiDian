@@ -18,6 +18,7 @@
     AdView * adView;
     UserInfo *userInfo;
     NSMutableArray *advDatas;
+    BOOL gNoRefresh;
 }
 
 @end
@@ -60,6 +61,8 @@
     
     userInfo = [[UserModel Instance] getUserInfo];
     [self getADVData];
+    
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -133,7 +136,7 @@
     //    是否需要支持定时循环滚动，默认为YES
     //    adView.isNeedCycleRoll = YES;
     
-    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleNone];
     //    设置图片滚动时间,默认3s
     //    adView.adMoveTime = 2.0;
     
@@ -175,7 +178,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -193,7 +196,7 @@
                                        
                                        NSMutableArray *noticeNews = [Tool readJsonStrToNoticeArray:operation.responseString];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -306,6 +309,7 @@
     if (row >= [notices count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -352,6 +356,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -368,6 +373,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

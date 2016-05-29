@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RepairResuleItem : NSObject
+@interface RepairResuleItem : Jastor
 
 @property (nonatomic, retain) NSString *dimensionName;
 @property int dimensionId;

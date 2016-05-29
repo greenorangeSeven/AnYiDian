@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TQImageCache.h"
 
-@interface ConvenienceTypeView : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, IconDownloaderDelegate>
+@interface ConvenienceTypeView : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 {
     NSMutableArray *types;
     TQImageCache * _iconCache;

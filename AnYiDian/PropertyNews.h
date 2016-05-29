@@ -14,5 +14,6 @@
 @property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *desc;
 @property (copy, nonatomic) NSString *imgFull;
+@property (copy, nonatomic) NSString *isRead;
 
 @end

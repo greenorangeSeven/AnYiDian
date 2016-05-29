@@ -26,12 +26,12 @@
     }
     else if (self.bill.typeId == 1)
     {
-        moneyStr = [NSString stringWithFormat:@"电费：%0.2f元", self.bill.totalMoney];
+        moneyStr = [NSString stringWithFormat:@"车辆秩序维护费：%0.2f元", self.bill.totalMoney];
     }
-    else if (self.bill.typeId == 2)
-    {
-        moneyStr = [NSString stringWithFormat:@"停车费：%0.2f元", self.bill.totalMoney];
-    }
+//    else if (self.bill.typeId == 2)
+//    {
+//        moneyStr = [NSString stringWithFormat:@"停车费：%0.2f元", self.bill.totalMoney];
+//    }
     self.moneyLb.text = moneyStr;
     self.totalLb.text = [NSString stringWithFormat:@"%0.2f元", self.bill.totalMoney];
     

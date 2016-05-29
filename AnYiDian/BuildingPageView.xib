@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BuildingPageView">
             <connections>
                 <outlet property="headerView" destination="Nat-2e-2Wb" id="kDp-v5-5Dk"/>
                 <outlet property="marketingView" destination="pdI-jh-AeF" id="Fju-Cq-Ezx"/>
+                <outlet property="policyReddotIv" destination="sqj-Xz-dEq" id="92G-XX-DrI"/>
                 <outlet property="preferentialView" destination="eNJ-tj-Sdb" id="TKg-Gk-U47"/>
                 <outlet property="tableView" destination="BaH-eW-8Ri" id="ayg-n5-zrg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -26,7 +27,7 @@
                 </tableView>
                 <view contentMode="scaleToFill" id="Nat-2e-2Wb">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="376"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="FoC-RQ-bfB">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
@@ -36,7 +37,7 @@
                             <rect key="frame" x="0.0" y="230" width="320" height="107"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <view contentMode="scaleToFill" id="pdI-jh-AeF">
+                                <view multipleTouchEnabled="YES" contentMode="scaleToFill" id="pdI-jh-AeF">
                                     <rect key="frame" x="0.0" y="1" width="159" height="105"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
@@ -61,7 +62,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
-                                <view contentMode="scaleToFill" id="eNJ-tj-Sdb">
+                                <view multipleTouchEnabled="YES" contentMode="scaleToFill" id="eNJ-tj-Sdb">
                                     <rect key="frame" x="160" y="1" width="160" height="105"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                     <subviews>
@@ -83,6 +84,10 @@
                                             <color key="textColor" red="0.65490196079999996" green="0.6588235294" blue="0.66274509800000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="reddot" id="sqj-Xz-dEq">
+                                            <rect key="frame" x="139" y="6" width="15" height="15"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
@@ -116,16 +121,12 @@
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-            <point key="canvasLocation" x="357" y="297"/>
+            <point key="canvasLocation" x="202" y="297"/>
         </view>
     </objects>
     <resources>
         <image name="bulid_qmyx" width="77" height="85"/>
         <image name="bulid_yhzc" width="77" height="85"/>
+        <image name="reddot" width="24" height="24"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>

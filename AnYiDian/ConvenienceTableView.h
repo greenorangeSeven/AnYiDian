@@ -12,6 +12,8 @@
 
 @interface ConvenienceTableView : UIViewController<UITableViewDelegate,UITableViewDataSource,EGORefreshTableHeaderDelegate,MBProgressHUDDelegate,CLLocationManagerDelegate,BMKLocationServiceDelegate>
 {
+    UserInfo *userInfo;
+    
     NSMutableArray *shops;
     BOOL isLoading;
     BOOL isLoadOver;

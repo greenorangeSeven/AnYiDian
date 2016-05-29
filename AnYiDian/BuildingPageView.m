@@ -19,6 +19,7 @@
 #import "CommDetailView.h"
 #import "Estate.h"
 #import "PreferentialView.h"
+#import "NewsCountAll.h"
 
 @interface BuildingPageView ()
 {
@@ -27,6 +28,7 @@
     NSMutableArray *activityNews;
     NSMutableArray *newsData;
     NSMutableArray *estateData;
+    NewsCountAll *newsCountAll;
 }
 
 @end
@@ -39,6 +41,7 @@
     self.tabBarItem.title = @"房产";
     
     userInfo = [[UserModel Instance] getUserInfo];
+    newsCountAll = [[UserModel Instance] getNewsCountAll];
     
     UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle: @"签到" style:UIBarButtonItemStyleBordered target:self action:@selector(signInAction:)];
     self.navigationItem.leftBarButtonItem = leftBtn;
@@ -58,6 +61,11 @@
     [self getEstateData];
     [self initNewsTable];
     [self addTapAction];
+    
+    if(newsCountAll.policyCount > newsCountAll.hisPolicyCount)
+    {
+        self.policyReddotIv.hidden = NO;
+    }
 }
 
 - (void)addTapAction
@@ -82,6 +90,9 @@
     PreferentialView *preferentialView = [[PreferentialView alloc] init];
     preferentialView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:preferentialView animated:YES];
+    newsCountAll.hisPolicyCount = newsCountAll.policyCount;
+    [[UserModel Instance] saveNewsCountAll:newsCountAll];
+    self.policyReddotIv.hidden = YES;
 }
 
 - (void)getUrl
@@ -173,6 +184,7 @@
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setValue:@"5" forKey:@"countPerPages"];
     [param setValue:@"1" forKey:@"pageNumbers"];
+    [param setValue:userInfo.regUserId forKey:@"regUserId"];
     NSString *getNewsListUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findRecentInfoByPage] params:param];
     
     [[AFOSCClient sharedClient]getPath:getNewsListUrl parameters:Nil
@@ -238,7 +250,7 @@
     //    是否需要支持定时循环滚动，默认为YES
     //    adView.isNeedCycleRoll = YES;
     
-    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleNone];
     //    设置图片滚动时间,默认3s
     //    adView.adMoveTime = 2.0;
     
@@ -287,6 +299,13 @@
     cell.descLb.text = news.desc;
     [cell.photoIv sd_setImageWithURL:[NSURL URLWithString:news.imgFull] placeholderImage:[UIImage imageNamed:@"placeHoder"]];
     [Tool roundTextView:cell.photoIv andBorderWidth:0.0 andCornerRadius:3.0];
+    if ([news.isRead intValue] > 0) {
+        cell.reddotIv.hidden = YES;
+    }
+    else
+    {
+        cell.reddotIv.hidden = NO;
+    }
     return cell;
 }
 
@@ -295,12 +314,46 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSUInteger row = [indexPath row];
     PropertyNews *news = [newsData objectAtIndex:row];
+    
+    [self addRhUserReadRecent:news.newsId];
+    
+    news.isRead = [[NSString alloc] init];
+    news.isRead = @"1";
+    [self.tableView reloadData];
+    
     NSString *recentDetailHtm = [NSString stringWithFormat:@"%@%@%@", api_base_url, htm_recentDetail ,news.newsId];
     CommDetailView *detailView = [[CommDetailView alloc] init];
     detailView.titleStr = @"详情";
     detailView.urlStr = recentDetailHtm;
     detailView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:detailView animated:YES];
+}
+
+- (void)addRhUserReadRecent:(NSString *)newsId
+{
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setValue:newsId forKey:@"newsId"];
+    [param setValue:userInfo.regUserId forKey:@"regUserId"];
+    NSString *addRhUserReadRecentUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_addRhUserReadRecent] params:param];
+    
+    [[AFOSCClient sharedClient]getPath:addRhUserReadRecentUrl parameters:Nil
+                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                   NSData *data = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                                   NSError *error;
+                                   NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                   
+//                                   [self.tableView reloadData];
+                                   
+                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                   NSLog(@"列表获取出错");
+                                   
+                                   if ([UserModel Instance].isNetworkRunning == NO) {
+                                       return;
+                                   }
+                                   if ([UserModel Instance].isNetworkRunning) {
+                                       [Tool showCustomHUD:@"网络不给力" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
+                                   }
+                               }];
 }
 
 - (void)didReceiveMemoryWarning {

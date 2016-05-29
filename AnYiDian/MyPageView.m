@@ -22,6 +22,7 @@
 #import "PayFeeFrameView.h"
 #import "InviteView.h"
 #import "ChangeHouseView.h"
+#import "AddHouseView.h"
 
 #define ORIGINAL_MAX_WIDTH 640.0f
 
@@ -57,6 +58,7 @@
                 [[SettingModel alloc] initWith: @"我的订单" andImg:nil andTag:3 andTitle2:@""],
                 [[SettingModel alloc] initWith: @"我的缴费" andImg:nil andTag:4 andTitle2:@""],
                 [[SettingModel alloc] initWith: @"我的报修" andImg:nil andTag:5 andTitle2:@""],
+                [[SettingModel alloc] initWith: @"房间绑定" andImg:nil andTag:6 andTitle2:@""],
                 nil];
     
     self.tableView.delegate = self;
@@ -117,7 +119,7 @@
                                     else
                                     {
                                         NSInteger topicCount = [[json objectForKey:@"data"] integerValue];
-                                        self.topicCountLb.text = [NSString stringWithFormat:@"%d条新朋友圈", topicCount];
+                                        self.topicCountLb.text = [NSString stringWithFormat:@"%d条新邻里圈", topicCount];
                                     }
                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                     NSLog(@"列表获取出错");
@@ -251,6 +253,13 @@
             RepairTableView *repairTableView = [[RepairTableView alloc] init];
             repairTableView.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:repairTableView animated:YES];
+        }
+            break;
+        case 6:
+        {
+            AddHouseView *addHouseView = [[AddHouseView alloc] init];
+            addHouseView.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:addHouseView animated:YES];
         }
             break;
         default:

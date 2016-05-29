@@ -15,6 +15,9 @@
 #import "GrouponShopView.h"
 
 @interface GrouponView ()
+{
+    BOOL gNoRefresh;
+}
 
 @end
 
@@ -24,6 +27,8 @@
     [super viewDidLoad];
     
     self.title = self.shopType.shopTypeName;
+    
+    userInfo = [[UserModel Instance] getUserInfo];
     
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -41,6 +46,7 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
     commoditys = [[NSMutableArray alloc] initWithCapacity:20];
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -67,7 +73,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -78,6 +84,7 @@
         [param setValue:@"0" forKey:@"stateId"];
         [param setValue:@"0" forKey:@"classType"];
         [param setValue:self.shopType.shopTypeId forKey:@"shopTypeId"];
+        [param setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
         
         NSString *findCommodityUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_findShopInfoByPage] params:param];
         [[AFOSCClient sharedClient] getPath:findCommodityUrl parameters:Nil
@@ -91,7 +98,7 @@
                                        
                                        NSMutableArray *commNews = [NSMutableArray arrayWithArray:[Tool readJsonToObjArray:array andObjClass:[Groupon class]]];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -173,6 +180,10 @@
     {
         return CGSizeMake(175, 175);
     }
+    if(IS_IPHONE_6plus)
+    {
+        return CGSizeMake(200, 175);
+    }
     return CGSizeMake(155, 175);
     
 }
@@ -234,6 +245,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -250,6 +262,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

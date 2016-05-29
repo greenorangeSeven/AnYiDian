@@ -43,4 +43,9 @@
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;
 
+@property (weak, nonatomic) IBOutlet UIView *operationView;
+@property (weak, nonatomic) IBOutlet UILabel *totalMoneyLb;
+@property (weak, nonatomic) IBOutlet UIButton *payfeeBtn;
+- (IBAction)goPayAction:(id)sender;
+
 @end

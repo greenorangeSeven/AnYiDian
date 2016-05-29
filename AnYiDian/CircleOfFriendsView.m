@@ -17,6 +17,9 @@
 #import "SignInView.h"
 
 @interface CircleOfFriendsView ()
+{
+    BOOL gNoRefresh;
+}
 
 @property(nonatomic, strong) IBOutlet UIToolbar *toolbar;
 @property(nonatomic, strong) IBOutlet UITextField *textField;
@@ -30,7 +33,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title =@"朋友圈";
+    self.title =@"邻里圈";
     
 //    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle: @"签到" style:UIBarButtonItemStyleBordered target:self action:@selector(signInAction:)];
 //    self.navigationItem.leftBarButtonItem = leftBtn;
@@ -65,6 +68,7 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
     topics = [[NSMutableArray alloc] initWithCapacity:20];
+    gNoRefresh = YES;
     [self reload:YES];
     
     self.textField = [[UITextField alloc] initWithFrame:CGRectMake(-10, 0, 0, 0)];
@@ -252,7 +256,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -274,7 +278,7 @@
                                        
                                        NSMutableArray *topicNews = [Tool readJsonStrToTopicFullArray:operation.responseString];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -283,7 +287,7 @@
                                            NSError *error;
                                            NSDictionary *topicJsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
                                            int totalRecord = [[[topicJsonDic objectForKey:@"data"] objectForKey:@"totalRecord"] intValue];
-                                           self.recordNumLb.text = [NSString stringWithFormat:@"共%d条朋友圈动态", totalRecord];
+                                           self.recordNumLb.text = [NSString stringWithFormat:@"共%d条邻里圈动态", totalRecord];
                                            
                                            int count = [topicNews count];
                                            allCount += count;
@@ -580,7 +584,7 @@
     UserInfo *userInfo = [[UserModel Instance] getUserInfo];
     if ([userInfo.nickName length] == 0) {
         if (self.publishAlert == nil) {
-            self.publishAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您还没完善您的昵称\n填写昵称后才能发布朋友圈！" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确认", nil];
+            self.publishAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您还没完善您的昵称\n填写昵称后才能发布邻里圈！" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确认", nil];
         }
         [self.publishAlert show];
         return;
@@ -596,8 +600,8 @@
 - (void)deteleAction:(id)sender
 {
     UIButton *tap = (UIButton *)sender;
-    self.deleteAlert = [[UIAlertView alloc] initWithTitle:@"朋友圈删除"
-                                                 message:@"你确定要删除这条朋友圈消息"
+    self.deleteAlert = [[UIAlertView alloc] initWithTitle:@"邻里圈删除"
+                                                 message:@"你确定要删除这条邻里圈消息"
                                                 delegate:self
                                        cancelButtonTitle:@"取消"
                                        otherButtonTitles:@"删除", nil];
@@ -676,6 +680,7 @@
     if (row >= [topics count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -718,6 +723,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -734,6 +740,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }
@@ -742,7 +749,7 @@
     UserInfo *userInfo = [[UserModel Instance] getUserInfo];
     if ([userInfo.nickName length] == 0) {
         if (self.publishAlert == nil) {
-            self.publishAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您还没完善您的昵称\n填写昵称后才能发布朋友圈！" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确认", nil];
+            self.publishAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您还没完善您的昵称\n填写昵称后才能发布邻里圈！" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确认", nil];
         }
         [self.publishAlert show];
         return;

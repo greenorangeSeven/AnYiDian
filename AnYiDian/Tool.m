@@ -602,7 +602,7 @@
     //朋友圈
     CircleOfFriendsView *friendsPage = [[CircleOfFriendsView alloc] initWithNibName:@"CircleOfFriendsView" bundle:nil];
     friendsPage.tabBarItem.image = [UIImage imageNamed:@"tab_py"];
-    friendsPage.tabBarItem.title = @"朋友圈";
+    friendsPage.tabBarItem.title = @"邻里圈";
     UINavigationController *friendsPageNav = [[UINavigationController alloc] initWithRootViewController:friendsPage];
     
     //超市

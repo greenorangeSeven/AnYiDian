@@ -39,6 +39,10 @@
     [Tool clearWebViewBackground:self.webView];
     //    [self.webView setScalesPageToFit:YES];
     [self.webView sizeToFit];
+    
+    if (!self.urlStr) {
+        self.urlStr = [NSString stringWithFormat:@"%@%@%@", api_base_url, htm_shopDetail ,self.shopInfo.shopId];
+    }
     NSURL *url = [[NSURL alloc]initWithString:self.urlStr];
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
     self.webView.delegate = self;

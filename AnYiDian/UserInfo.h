@@ -20,6 +20,6 @@
 
 @property (nonatomic, retain) UserHouse *defaultUserHouse;
 
-@property (nonatomic, retain) NSArray *rhUserHouseList;
+@property (nonatomic, retain) NSMutableArray *rhUserHouseList;
 
 @end

@@ -25,6 +25,8 @@
 @property (nonatomic, retain) NSString *phone;
 @property double totalPrice;
 
+@property (nonatomic, retain) NSString *userRecontent;
+
 @property (nonatomic, retain) NSMutableArray *commodityList;
 @property (nonatomic, retain) NSMutableArray *commodityObjectList;
 

@@ -27,7 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"发布朋友圈";
+    self.title = @"发布邻里圈";
     
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle: @"发布" style:UIBarButtonItemStyleBordered target:self action:@selector(submitTopicAction:)];
     self.navigationItem.rightBarButtonItem = rightBtn;
@@ -83,7 +83,7 @@
     [request setDidFinishSelector:@selector(requestSubmit:)];
     [request startAsynchronous];
     request.hud = [[MBProgressHUD alloc] initWithView:self.view];
-    [Tool showHUD:@"提交朋友圈" andView:self.view andHUD:request.hud];
+    [Tool showHUD:@"提交邻里圈" andView:self.view andHUD:request.hud];
 }
 
 - (void)requestSubmit:(ASIHTTPRequest *)request

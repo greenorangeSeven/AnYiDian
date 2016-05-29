@@ -11,10 +11,16 @@
 #import "PayFeeCell.h"
 #import "Bill.h"
 #import "PayFeeDetailView.h"
+#import "SSCheckBoxView.h"
+#import "PayFeeDetailNewsView.h"
 
 @interface PayFeeTableView ()
 {
     UserInfo *userInfo;
+    BOOL gNoRefresh;
+    NSMutableArray *goBillData;
+    double totalMoney;
+    SSCheckBoxView *selectAllCB;
 }
 
 @end
@@ -28,12 +34,15 @@
     CGRect tableFrame = self.tableView.frame;
     tableFrame.size.height = self.frameView.frame.size.height;
     tableFrame.size.width = self.frameView.frame.size.width;
-    self.tableView.frame = tableFrame;
+    self.view.frame = tableFrame;
     
 //    CGRect viewFrame = self.view.frame;
 //    viewFrame.size.height = self.frameView.frame.size.height;
 //    viewFrame.size.width = self.frameView.frame.size.width;
 //    self.view.frame = viewFrame;
+    
+    totalMoney = 0.00;
+    goBillData = [[NSMutableArray alloc] init];
     
     self.tableView.tableHeaderView = self.headerView;
     
@@ -46,6 +55,9 @@
     
     self.faceIv.layer.masksToBounds = YES;
     self.faceIv.layer.cornerRadius = self.faceIv.frame.size.height / 2;    //最重要的是这个地方要设成imgview高的一半
+    
+    self.payfeeBtn.layer.masksToBounds = YES;
+    self.payfeeBtn.layer.cornerRadius = 10;
     
     userInfo = [[UserModel Instance] getUserInfo];
     [self.faceIv sd_setImageWithURL:[NSURL URLWithString:userInfo.photoFull] placeholderImage:[UIImage imageNamed:@"default_head.png"]];
@@ -70,9 +82,60 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
     fees = [[NSMutableArray alloc] initWithCapacity:999];
+    gNoRefresh = YES;
     [self reload:YES];
     
+    selectAllCB = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(12, 12, 30, 30) style:kSSCheckBoxViewStyleGreen checked:NO];
+    [selectAllCB setStateChangedBlock:^(SSCheckBoxView *cbv) {
+        if (cbv.checked) {
+            for (Bill *bill in fees) {
+                if (bill.stateId != 1) {
+                    bill.ischeck = YES;
+                }
+            }
+        }
+        else
+        {
+            for (Bill *bill in fees) {
+                if (bill.stateId != 1) {
+                    bill.ischeck = NO;
+                }
+            }
+        }
+        [self totalSelectMoney];
+        [self.tableView reloadData];
+    }];
+    [self.operationView addSubview:selectAllCB];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshed:) name:Notification_RefreshPayFeeTableView object:nil];
+}
+
+- (void)totalSelectMoney
+{
+    [goBillData removeAllObjects];
+    totalMoney = 0.00;
+    NSUInteger nofeeNum = 0;
+    NSUInteger checkNum = 0;
+    for (Bill *bill in fees) {
+        if (bill.ischeck) {
+            totalMoney += bill.totalMoney;
+            checkNum += 1;
+            [goBillData addObject:bill];
+        }
+        if (bill.stateId != 1) {
+            nofeeNum += 1;
+        }
+    }
+    if (nofeeNum == checkNum)
+    {
+        [selectAllCB setChecked:YES];
+    }
+    else
+    {
+        [selectAllCB setChecked:NO];
+    }
+    
+    self.totalMoneyLb.text = [NSString stringWithFormat:@"合计：%0.2f元", totalMoney];
 }
 
 - (void)refreshed:(NSNotification *)notification
@@ -110,12 +173,11 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
 //        int pageIndex = allCount/20 + 1;
         
-        //生成获取报修列表URL
         NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
         [param setValue:userInfo.defaultUserHouse.numberId forKey:@"numberId"];
         [param setValue:self.typeId forKey:@"typeId"];
@@ -142,7 +204,7 @@
                                        
                                        NSMutableArray *feeNews = [Tool readJsonStrToGuizhouBillArray:operation.responseString];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -154,6 +216,7 @@
                                                isLoadOver = YES;
                                            }
                                            [fees addObjectsFromArray:feeNews];
+                                           [self totalSelectMoney];
                                            [self.tableView reloadData];
                                            [self doneLoadingTableViewData];
                                        }
@@ -246,6 +309,23 @@
                 cell.stateLb.textColor = [Tool getColorForMain];
                 cell.monthLb.textColor = [Tool getColorForMain];
                 cell.moneyLb.textColor = [UIColor blackColor];
+                
+                SSCheckBoxView *cb = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(12, 7, 30, 30) style:kSSCheckBoxViewStyleGreen checked:bill.ischeck];
+                cb.tag = row;
+                [cb setStateChangedBlock:^(SSCheckBoxView *cbv) {
+                    if (cbv.checked) {
+                        Bill *bill = [fees objectAtIndex:cbv.tag];
+                        bill.ischeck = YES;
+                    }
+                    else
+                    {
+                        Bill *bill = [fees objectAtIndex:cbv.tag];
+                        bill.ischeck = NO;
+                        
+                    }
+                    [self totalSelectMoney];
+                }];
+                [cell addSubview:cb];
             }
             return cell;
             
@@ -270,17 +350,18 @@
     if (row >= [fees count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
     else
     {
-        Bill *bill = [fees objectAtIndex:row];
-        if (bill && bill.stateId == 0) {
-            PayFeeDetailView *payDetail = [[PayFeeDetailView alloc] init];
-            payDetail.bill = bill;
-            [self.navigationController pushViewController:payDetail animated:YES];
-        }
+//        Bill *bill = [fees objectAtIndex:row];
+//        if (bill && bill.stateId == 0) {
+//            PayFeeDetailView *payDetail = [[PayFeeDetailView alloc] init];
+//            payDetail.bill = bill;
+//            [self.navigationController pushViewController:payDetail animated:YES];
+//        }
     }
 }
 
@@ -316,6 +397,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -332,6 +414,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }
@@ -345,6 +428,18 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)goPayAction:(id)sender {
+    if(goBillData.count <= 0)
+    {
+        [Tool showCustomHUD:@"请选择缴费账单" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
+        return;
+    }
+    PayFeeDetailNewsView *payFeeView = [[PayFeeDetailNewsView alloc] init];
+    payFeeView.bills = goBillData;
+    payFeeView.totalFee = totalMoney;
+    [self.navigationController pushViewController:payFeeView animated:YES];
 }
 
 @end

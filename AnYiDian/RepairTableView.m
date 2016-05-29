@@ -15,6 +15,7 @@
 @interface RepairTableView ()
 {
     UserInfo *userInfo;
+    BOOL gNoRefresh;
 }
 
 @end
@@ -61,6 +62,8 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
     repairs = [[NSMutableArray alloc] initWithCapacity:20];
+    
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -103,7 +106,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -121,7 +124,7 @@
                                        
                                        NSMutableArray *repairsNews = [Tool readJsonStrToRepairArray:operation.responseString];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -242,6 +245,7 @@
     if (row >= [repairs count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -288,6 +292,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -304,6 +309,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

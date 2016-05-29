@@ -10,6 +10,7 @@
 
 @interface MainPageView : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *adIv;
 
 @property (weak, nonatomic) IBOutlet UIView *newsHouseView;
@@ -30,5 +31,6 @@
 - (IBAction)suitAction:(id)sender;
 - (IBAction)committeeNoticeAction:(id)sender;
 - (IBAction)payfeeAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *shopReddotIv;
 
 @end

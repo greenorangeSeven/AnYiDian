@@ -13,6 +13,9 @@
 #import "AdView.h"
 
 @interface OldHouseView ()
+{
+    BOOL gNoRefresh;
+}
 
 @end
 
@@ -52,6 +55,8 @@
     
     houseData = [[NSMutableArray alloc] initWithCapacity:20];
     [self getTopBusinessInfo];
+    
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -128,7 +133,7 @@
     //    是否需要支持定时循环滚动，默认为YES
     //    adView.isNeedCycleRoll = YES;
     
-    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleNone];
     //    设置图片滚动时间,默认3s
     //    adView.adMoveTime = 2.0;
     
@@ -153,7 +158,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -170,7 +175,7 @@
                                         
                                         NSMutableArray *houseNews = [Tool readJsonStrToTradeArray:operation.responseString];
                                         isLoading = NO;
-                                        if (!noRefresh) {
+                                        if (!gNoRefresh) {
                                             [self clear];
                                         }
                                         
@@ -312,6 +317,7 @@
     if (row >= [houseData count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -358,6 +364,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -374,6 +381,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

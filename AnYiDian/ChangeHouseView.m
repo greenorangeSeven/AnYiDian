@@ -80,38 +80,75 @@
     cell.userStateNameLb.text = house.userStateName;
     [cell.changeBtn.layer setCornerRadius:5.0f];
     
+//    if ([defaultUserHouse.numberId isEqualToString:house.numberId] == YES) {
+//        cell.changeBtn.enabled = NO;
+//        [cell.changeBtn setTitle:@"当前" forState:UIControlStateDisabled];
+//        [cell.changeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+////        [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_orange"] forState:UIControlStateDisabled];
+//        [cell.changeBtn setBackgroundColor:[Tool getColorForMain]];
+//    }
+//    else
+//    {
+//        if ([defaultUserHouse.userStateId intValue] == 0) {
+//            cell.changeBtn.enabled = NO;
+//            [cell.changeBtn setTitle:@"未验证" forState:UIControlStateNormal];
+//            [cell.changeBtn setTitleColor:[UIColor colorWithRed:130.0/255.0 green:130.0/255.0 blue:130.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+////            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
+//            [cell.changeBtn setBackgroundColor:[UIColor colorWithRed:0.81 green:0.81 blue:0.81 alpha:1]];
+//            cell.changeBtn.tag = row;
+//        }
+//        else if ([defaultUserHouse.userStateId intValue] == 1)
+//        {
+//            cell.changeBtn.enabled = YES;
+//            [cell.changeBtn setTitle:@"设为默认" forState:UIControlStateNormal];
+//            [cell.changeBtn setTitleColor:[UIColor colorWithRed:130.0/255.0 green:130.0/255.0 blue:130.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+////            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
+//            [cell.changeBtn setBackgroundColor:[UIColor colorWithRed:0.81 green:0.81 blue:0.81 alpha:1]];
+//            cell.changeBtn.tag = row;
+//        }
+//        else if ([defaultUserHouse.userStateId intValue] == 2)
+//        {
+//            cell.changeBtn.enabled = NO;
+//            [cell.changeBtn setTitle:@"暂停使用" forState:UIControlStateNormal];
+//            [cell.changeBtn setTitleColor:[UIColor colorWithRed:130.0/255.0 green:130.0/255.0 blue:130.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+////            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
+//            [cell.changeBtn setBackgroundColor:[UIColor colorWithRed:0.81 green:0.81 blue:0.81 alpha:1]];
+//            cell.changeBtn.tag = row;
+//        }
+//    }
+    
     if ([defaultUserHouse.numberId isEqualToString:house.numberId] == YES) {
         cell.changeBtn.enabled = NO;
         [cell.changeBtn setTitle:@"当前" forState:UIControlStateDisabled];
         [cell.changeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//        [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_orange"] forState:UIControlStateDisabled];
+        //        [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_orange"] forState:UIControlStateDisabled];
         [cell.changeBtn setBackgroundColor:[Tool getColorForMain]];
     }
     else
     {
-        if ([defaultUserHouse.userStateId intValue] == 0) {
+        if ([house.userStateId intValue] == 0) {
             cell.changeBtn.enabled = NO;
             [cell.changeBtn setTitle:@"未验证" forState:UIControlStateNormal];
             [cell.changeBtn setTitleColor:[UIColor colorWithRed:130.0/255.0 green:130.0/255.0 blue:130.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-//            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
+            //            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
             [cell.changeBtn setBackgroundColor:[UIColor colorWithRed:0.81 green:0.81 blue:0.81 alpha:1]];
             cell.changeBtn.tag = row;
         }
-        else if ([defaultUserHouse.userStateId intValue] == 1)
+        else if ([house.userStateId intValue] == 1)
         {
             cell.changeBtn.enabled = YES;
             [cell.changeBtn setTitle:@"设为默认" forState:UIControlStateNormal];
             [cell.changeBtn setTitleColor:[UIColor colorWithRed:130.0/255.0 green:130.0/255.0 blue:130.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-//            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
+            //            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
             [cell.changeBtn setBackgroundColor:[UIColor colorWithRed:0.81 green:0.81 blue:0.81 alpha:1]];
             cell.changeBtn.tag = row;
         }
-        else if ([defaultUserHouse.userStateId intValue] == 2)
+        else if ([house.userStateId intValue] == 2)
         {
             cell.changeBtn.enabled = NO;
             [cell.changeBtn setTitle:@"暂停使用" forState:UIControlStateNormal];
             [cell.changeBtn setTitleColor:[UIColor colorWithRed:130.0/255.0 green:130.0/255.0 blue:130.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-//            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
+            //            [cell.changeBtn setBackgroundImage:[UIImage imageNamed:@"button_gary"] forState:UIControlStateNormal];
             [cell.changeBtn setBackgroundColor:[UIColor colorWithRed:0.81 green:0.81 blue:0.81 alpha:1]];
             cell.changeBtn.tag = row;
         }

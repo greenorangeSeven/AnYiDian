@@ -172,7 +172,7 @@
     //生成注册URL
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setValue:self.ownerNameStr forKey:@"regUserName"];
-//    [param setValue:self.idCardStr forKey:@"idCardLast4"];
+    [param setValue:self.idCardStr forKey:@"idCardLast4"];
 //    [param setValue:self.identityIdStr forKey:@"userTypeId"];
     [param setValue:self.houseNumId forKey:@"numberId"];
     [param setValue:validateCodeStr forKey:@"validateCode"];
@@ -187,7 +187,7 @@
     [request setTimeOutSeconds:30];
     [request setPostValue:Appkey forKey:@"accessId"];
     [request setPostValue:self.ownerNameStr forKey:@"regUserName"];
-//    [request setPostValue:self.idCardStr forKey:@"idCardLast4"];
+    [request setPostValue:self.idCardStr forKey:@"idCardLast4"];
 //    [request setPostValue:self.identityIdStr forKey:@"userTypeId"];
     [request setPostValue:self.houseNumId forKey:@"numberId"];
     [request setPostValue:validateCodeStr forKey:@"validateCode"];
@@ -261,7 +261,7 @@
             for (int i = 0; i < [userInfo.rhUserHouseList count]; i++) {
                 UserHouse *userHouse = (UserHouse *)[userInfo.rhUserHouseList objectAtIndex:0];
                 if (i == 0) {
-                    [userModel saveValue:[userHouse.userTypeId stringValue] ForKey:@"userTypeId"];
+                    [userModel saveValue:[NSString stringWithFormat:@"%d",userHouse.userTypeId] ForKey:@"userTypeId"];
                     [userModel saveValue:userHouse.userTypeName ForKey:@"userTypeName"];
                     [userModel saveValue:userHouse.numberName ForKey:@"numberName"];
                     [userModel saveValue:userHouse.buildingName ForKey:@"buildingName"];

@@ -13,6 +13,9 @@
 #import "CommDetailView.h"
 
 @interface PropertyNewsView ()
+{
+    BOOL gNoRefresh;
+}
 
 @end
 
@@ -39,6 +42,7 @@
     
     newsData = [[NSMutableArray alloc] initWithCapacity:20];
 
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -49,7 +53,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -72,7 +76,7 @@
                                        
                                        NSMutableArray *noticeNews = [NSMutableArray arrayWithArray:[Tool readJsonToObjArray:array andObjClass:[PropertyNews class]]];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -200,6 +204,7 @@
     if (row >= [newsData count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -247,6 +252,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -263,6 +269,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

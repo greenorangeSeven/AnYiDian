@@ -13,6 +13,9 @@
 #import "UIImageView+WebCache.h"
 
 @interface ConvenienceTableView ()
+{
+     BOOL gNoRefresh;
+}
 
 @end
 
@@ -22,6 +25,8 @@
     [super viewDidLoad];
     
     self.title = self.type.shopTypeName;
+    
+    userInfo = [[UserModel Instance] getUserInfo];
     
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     
@@ -47,6 +52,7 @@
         longitude = 0.0;
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
+        gNoRefresh = YES;
         [self reload:YES];
     }
     // 开始定位
@@ -87,6 +93,7 @@
     longitude = 0.0;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -130,6 +137,7 @@
         longitude = mycoord.longitude;
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
+        gNoRefresh = YES;
         [self reload:YES];
         [_locService stopUserLocationService];
     }
@@ -155,6 +163,7 @@
     longitude = 0.0;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    gNoRefresh = YES;
     [self reload:YES];
 }
 
@@ -218,7 +227,7 @@
             return;
         }
         [Tool showHUD:@"加载中..." andView:self.view andHUD:hud];
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -228,6 +237,7 @@
         [param setValue:self.type.shopTypeId forKey:@"shopTypeId"];
         [param setValue:@"0" forKey:@"stateId"];
         [param setValue:[NSString stringWithFormat:@"%d", pageIndex] forKey:@"pageNumbers"];
+        [param setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
         [param setValue:@"20" forKey:@"countPerPages"];
         if(latitude > 0)
         {
@@ -241,7 +251,7 @@
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                        NSMutableArray *shopNews = [Tool readJsonStrToShopInfoArray:operation.responseString];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        @try {
@@ -369,6 +379,7 @@
     if (row >= [shops count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -418,6 +429,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -434,6 +446,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

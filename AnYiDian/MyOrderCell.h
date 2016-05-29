@@ -24,6 +24,8 @@
 @property (weak, nonatomic) IBOutlet UIView *subTotalView;
 @property (weak, nonatomic) IBOutlet UILabel *subTotalLb;
 @property (weak, nonatomic) IBOutlet UILabel *payTypeName;
+@property (weak, nonatomic) IBOutlet UIButton *commentOrderBtn;
+@property (weak, nonatomic) IBOutlet UIButton *orderSuccessBtn;
 
 - (void)loadShopCommoditys:(MyOrder *)order andRow:(int)indexRow;
 

@@ -23,12 +23,14 @@
 #import "NoticeTableView.h"
 #import "GrouponClassView.h"
 #import "PayFeeFrameView.h"
+#import "NewsCountAll.h"
 
 @interface MainPageView ()
 {
     AdView * adView;
     UserInfo *userInfo;
     NSMutableArray *advDatas;
+    NewsCountAll *newsCountAll;
 }
 
 @end
@@ -38,7 +40,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.view.frame.size.height);
+    
     userInfo = [[UserModel Instance] getUserInfo];
+    newsCountAll = [[UserModel Instance] getNewsCountAll];
 //    [self testAction];
     self.title = userInfo.defaultUserHouse.cellName;
     self.tabBarItem.title = @"首页";
@@ -55,6 +60,7 @@
     [Tool roundTextView:self.newsHouseView andBorderWidth:1.0 andCornerRadius:5.0];
     [Tool roundTextView:self.ershouHouseView andBorderWidth:1.0 andCornerRadius:5.0];
     
+    [self getNewsCountAllData];
     [self addTapAction];
     [self getADVData];
     [self getEstateData];
@@ -110,6 +116,9 @@
     ConvenienceTypeView *lifeServiceView = [[ConvenienceTypeView alloc] init];
     lifeServiceView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:lifeServiceView animated:YES];
+    newsCountAll.hisShopCount = newsCountAll.shopCount;
+    [[UserModel Instance] saveNewsCountAll:newsCountAll];
+    self.shopReddotIv.hidden = YES;
 }
 
 - (void)newsHouseTapClick
@@ -131,6 +140,60 @@
     GrouponClassView *supermarket = [[GrouponClassView alloc] init];
     supermarket.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:supermarket animated:YES];
+}
+
+- (void)getNewsCountAllData
+{
+    //如果有网络连接
+    if ([UserModel Instance].isNetworkRunning) {
+        NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+        [param setValue:userInfo.defaultUserHouse.cellId forKey:@"cellId"];
+        NSString *countAllUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_countAll] params:param];
+        
+        [[AFOSCClient sharedClient]getPath:countAllUrl parameters:Nil
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       @try {
+                                           NSData *data = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                                           NSError *error;
+                                           NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                           
+                                           NSString *state = [[json objectForKey:@"header"] objectForKey:@"state"];
+                                           if ([state isEqualToString:@"0000"]) {
+                                               NSDictionary *data = [json objectForKey:@"data"];
+                                               int shopCount = [[data objectForKey:@"shopCount"] intValue];
+                                               int policyCount = [[data objectForKey:@"policyCount"] intValue];
+                                               int pushCount = [[data objectForKey:@"pushCount"] intValue];
+                                               if (newsCountAll == nil) {
+                                                   newsCountAll = [[NewsCountAll alloc] init];
+                                                   newsCountAll.hisShopCount = 0;
+                                                   newsCountAll.hisPolicyCount = 0;
+                                                   newsCountAll.hisPushCount = 0;
+                                               }
+                                               newsCountAll.shopCount = shopCount;
+                                               newsCountAll.policyCount = policyCount;
+                                               newsCountAll.pushCount = pushCount;
+                                               [[UserModel Instance] saveNewsCountAll:newsCountAll];
+                                               if(newsCountAll.shopCount > newsCountAll.hisShopCount)
+                                               {
+                                                   self.shopReddotIv.hidden = NO;
+                                               }
+                                           }
+                                       }
+                                       @catch (NSException *exception) {
+                                           [NdUncaughtExceptionHandler TakeException:exception];
+                                       }
+                                       @finally {
+                                           
+                                       }
+                                   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       if ([UserModel Instance].isNetworkRunning == NO) {
+                                           return;
+                                       }
+                                       if ([UserModel Instance].isNetworkRunning) {
+                                           [Tool showCustomHUD:@"网络不给力" andView:self.view  andImage:@"37x-Failure.png" andAfterDelay:1];
+                                       }
+                                   }];
+    }
 }
 
 - (void)getADVData
@@ -196,7 +259,7 @@
     //    是否需要支持定时循环滚动，默认为YES
     //    adView.isNeedCycleRoll = YES;
     
-    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleNone];
     //    设置图片滚动时间,默认3s
     //    adView.adMoveTime = 2.0;
     

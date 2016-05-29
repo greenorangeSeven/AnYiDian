@@ -91,8 +91,9 @@
                                     else
                                     {
                                         [Tool showCustomHUD:@"签到成功" andView:self.view andImage:@"37x-Failure.png" andAfterDelay:2];
-                                        remainingIntegral += 1;
-                                        self.integralLb.text = [NSString stringWithFormat:@"您目前有%d积分", remainingIntegral];
+//                                        remainingIntegral += 1;
+//                                        self.integralLb.text = [NSString stringWithFormat:@"您目前有%d积分", remainingIntegral];
+                                        [self findRegUserInfoByUserId];
                                     }
                                     self.signInBtn.enabled = YES;
                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

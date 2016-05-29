@@ -261,7 +261,7 @@
     //    是否需要支持定时循环滚动，默认为YES
     //    adView.isNeedCycleRoll = YES;
     
-    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleNone];
     //    设置图片滚动时间,默认3s
     //    adView.adMoveTime = 2.0;
     

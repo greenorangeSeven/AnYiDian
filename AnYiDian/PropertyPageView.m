@@ -20,6 +20,7 @@
 #import "MyPageView.h"
 #import "SignInView.h"
 #import "PayFeeFrameView.h"
+#import "NewsCountAll.h"
 
 @interface PropertyPageView ()
 {
@@ -27,6 +28,7 @@
     AdView * adView;
     UserInfo *userInfo;
     NSMutableArray *advDatas;
+    NewsCountAll *newsCountAll;
 }
 
 @end
@@ -38,6 +40,8 @@
     
     self.title = @"物业服务";
     self.tabBarItem.title = @"物业";
+    
+    newsCountAll = [[UserModel Instance] getNewsCountAll];
     
     UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle: @"签到" style:UIBarButtonItemStyleBordered target:self action:@selector(signInAction:)];
     self.navigationItem.leftBarButtonItem = leftBtn;
@@ -142,7 +146,7 @@
     //    是否需要支持定时循环滚动，默认为YES
     //    adView.isNeedCycleRoll = YES;
     
-    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleRight];
+    [adView setAdTitleArray:titles withShowStyle:AdTitleShowStyleNone];
     //    设置图片滚动时间,默认3s
     //    adView.adMoveTime = 2.0;
     
@@ -196,11 +200,14 @@
             break;
         case 4:
         {
+            newsCountAll.hisPushCount = newsCountAll.pushCount;
+            [[UserModel Instance] saveNewsCountAll:newsCountAll];
             NoticeTableView *noticeView = [[NoticeTableView alloc] init];
             noticeView.hidesBottomBarWhenPushed = YES;
             noticeView.isCommittee = @"0";
             noticeView.title = @"小区公告";
             [self.navigationController pushViewController:noticeView animated:YES];
+            [self.tableView reloadData];
         }
             break;
         case 5:
@@ -255,6 +262,16 @@
     cell.titleLb.text = model.title;
     cell.detailLb.text = model.title2;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (model.tag == 4) {
+        if(newsCountAll.pushCount > newsCountAll.hisPushCount)
+        {
+            cell.reddotIv.hidden = NO;
+        }
+        else
+        {
+            cell.reddotIv.hidden = YES;
+        }
+    }
     
     return cell;
 }

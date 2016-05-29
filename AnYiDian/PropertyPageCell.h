@@ -12,5 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLb;
 @property (weak, nonatomic) IBOutlet UILabel *detailLb;
+@property (weak, nonatomic) IBOutlet UIImageView *reddotIv;
 
 @end

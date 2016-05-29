@@ -17,6 +17,7 @@
 @interface IntegralMarketView ()
 {
     CommodityFooterView *footerView;
+    BOOL gNoRefresh;
 }
 
 @end
@@ -45,6 +46,7 @@
     [_refreshHeaderView refreshLastUpdatedDate];
     
     commoditys = [[NSMutableArray alloc] initWithCapacity:20];
+    gNoRefresh = YES;
     [self reload:YES];
     [self getUrl];
 }
@@ -83,7 +85,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -100,7 +102,7 @@
                                        NSLog(@"the :%@",operation.responseString);
                                        NSMutableArray *commNews = [Tool readJsonStrToCommodityArray:operation.responseString];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -243,6 +245,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -259,6 +262,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }

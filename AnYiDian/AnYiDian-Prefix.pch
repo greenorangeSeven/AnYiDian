@@ -39,7 +39,7 @@
 #define Appkey @"10000001"
 #define AppSecret @"Hr54hiz7"
 //
-//#define api_base_url @"http://192.168.1.107:8080/guizhou_api/"
+//#define api_base_url @"http://192.168.1.110:8080/guizhou_api/"
 #define api_base_url @"http://121.41.13.253:80/guizhou_api/"
 //登录接口
 #define api_login @"regUser/login.htm"
@@ -53,6 +53,7 @@
 #define api_createRegCode @"regUser/createRegCode.htm"
 //注册接口
 #define api_regUser @"regUser/regUser.htm"
+#define api_bindOtherHouse @"regUser/bindOtherHouse.htm"
 //邀请注册接口
 #define api_invitationCodeReg @"regUser/invitationCodeReg.htm"
 //获得小区通知
@@ -73,6 +74,8 @@
 #define api_findRepairWorkDetaile @"repair/findRepairWorkDetail.htm"
 //报修评价
 #define api_modiRepairWorkOver @"repair/modiRepairWorkOver.htm"
+//统计最新记录数
+#define api_countAll @"params/countAll.htm"
 //获取广告信息
 #define api_findAdInfoList @"ad/findAdInfoList.htm"
 //获取生活查询
@@ -82,7 +85,7 @@
 //获取商家信息
 #define api_findShopInfoByPage @"shop/findShopInfoByPage.htm"
 //获取商家分类
-#define api_findShopInfoByPage @"shop/findShopInfoByPage.htm"
+//#define api_findShopInfoByPage @"shop/findShopInfoByPage.htm"
 //获取悦生活月刊列表
 #define api_findMonthlyByPageInfo @"monthly/findMonthlyByPageInfo.htm"
 //获取投诉类型
@@ -176,7 +179,13 @@
 //下单接口
 #define api_orderSubmit @"order/orderSubmit.htm"
 //更新订单状态为交易关闭
-#define updateOrderClose @"order/updateOrderClose.htm"
+#define api_updateOrderClose @"order/updateOrderClose.htm"
+//更新订单状态为交易成功
+#define api_appUpdateOrderSuccess @"order/appUpdateOrderSuccess.htm"
+//获取订单详情
+#define api_findOrderInfoById @"order/findOrderInfoById.htm"
+//订单评价
+#define api_submitOrderSorce @"order/submitOrderSorce.htm"
 //查询订单数据
 #define api_findOrderByPage @"order/findOrderByPage.htm"
 //获取所有订单状态
@@ -210,6 +219,8 @@
 #define api_findEstateInfoByPage @"estate/findEstateInfoByPage.htm"
 // 分页查询最新资讯信息
 #define api_findRecentInfoByPage @"estate/findRecentInfoByPage.htm"
+// 用户点击最新资讯信息
+#define api_addRhUserReadRecent @"estate/addRhUserReadRecent.htm"
 // 分页查询用户积分详情列表
 #define api_findIntegralLogByPage @"integral/findIntegralLogByPage.htm"
 // 点赞、取消点赞（优惠政策）
@@ -306,7 +317,7 @@
 #define PayFeeCellIdentifier @"PayFeeCellIdentifier"
 #define HotChooseCellIdentifier @"HotChooseCellIdentifier"
 #define ChangeHouseCellIdentifier @"ChangeHouseCellIdentifier"
-
+#define PayFeeDetailCellIdentifier @"PayFeeDetailCellIdentifier"
 
 
 #define Notification_RefreshAddVolunteerView @"Notification_RefreshAddVolunteerView"
@@ -317,6 +328,7 @@
 #define Notification_ShopCarGotoOrder @"Notification_ShopCarGotoOrder"
 #define Notification_RefreshPayFeeTableView @"Notification_RefreshPayFeeTableView"
 #define Notification_LifeServicePush @"Notification_LifeServicePush"
+#define Notification_ReloadMyOrder @"Notification_ReloadMyOrder"
 
 
 #define UserInfoCache @"UserInfoCache"
@@ -324,7 +336,7 @@
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 #define IS_IPHONE_6 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )667 ) < DBL_EPSILON )
-#define IS_IPHONE_6plus ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )1104 ) < DBL_EPSILON )
+#define IS_IPHONE_6plus ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )736 ) < DBL_EPSILON )
 
 #define IS_IOS7 ([[[UIDevice currentDevice]systemVersion]floatValue]>=7.0)
 #define IS_IOS8 ([[[UIDevice currentDevice]systemVersion]floatValue]>=8.0)

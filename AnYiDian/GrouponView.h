@@ -12,6 +12,8 @@
 
 @interface GrouponView : UIViewController<EGORefreshTableHeaderDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 {
+    UserInfo *userInfo;
+    
     NSMutableArray *commoditys;
 
     //下拉刷新

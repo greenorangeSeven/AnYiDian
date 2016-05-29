@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NewsCountAll.h"
 
 @interface UserModel : NSObject
 +(UserModel *) Instance;
@@ -40,5 +41,10 @@
 @property (copy,nonatomic) NSString * topicContent;
 
 -(NSString *)getIOSGuid;
+
+//统计
+@property (strong, nonatomic) NewsCountAll *newsCountAll;
+-(NewsCountAll *)getNewsCountAll;
+-(void)saveNewsCountAll:(NewsCountAll *)newsCountAll;
 
 @end

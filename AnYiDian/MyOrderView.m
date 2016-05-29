@@ -10,12 +10,14 @@
 #import "MyOrderView.h"
 #import "MyOrderCell.h"
 #import <AlipaySDK/AlipaySDK.h>
+#import "OrderCommentView.h"
 
 @interface MyOrderView ()
 {
     UserInfo *userInfo;
     NSString *stateId;
     int currentIndex;
+    BOOL gNoRefresh;
 }
 
 @end
@@ -52,9 +54,19 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePayedTable) name:ORDER_PAY_NOTIC object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMyOrder) name:Notification_ReloadMyOrder object:nil];
+
+    
     orders = [[NSMutableArray alloc] initWithCapacity:20];
     [self getUrl];
+    gNoRefresh = YES;
     [self reload:YES];
+}
+
+- (void)reloadMyOrder
+{
+    gNoRefresh = NO;
+    [self reload:NO];
 }
 
 - (void)backAction
@@ -77,7 +89,7 @@
         if (isLoading || isLoadOver) {
             return;
         }
-        if (!noRefresh) {
+        if (!gNoRefresh) {
             allCount = 0;
         }
         int pageIndex = allCount/20 + 1;
@@ -97,7 +109,7 @@
                                        
                                        NSMutableArray *orderNews = [Tool readJsonStrToOrderArray:operation.responseString];
                                        isLoading = NO;
-                                       if (!noRefresh) {
+                                       if (!gNoRefresh) {
                                            [self clear];
                                        }
                                        
@@ -224,14 +236,35 @@
             
             if (order.stateId == 0) {
                 cell.payOrderBtn.hidden = NO;
-                cell.payOrderBtn.tag = indexRow;
                 cell.closeOrderBtn.hidden = NO;
-                [cell.payOrderBtn addTarget:self action:@selector(doPay:) forControlEvents:UIControlEventTouchUpInside];
+                cell.orderSuccessBtn.hidden = YES;
+                cell.commentOrderBtn.hidden = YES;
+            }
+            else if (order.stateId == 2 || order.stateId == 5) {
+                cell.payOrderBtn.hidden = YES;
+                cell.closeOrderBtn.hidden = YES;
+                cell.orderSuccessBtn.hidden = NO;
+                cell.commentOrderBtn.hidden = YES;
+            }
+            else if (order.stateId == 3) {
+                cell.payOrderBtn.hidden = YES;
+                cell.closeOrderBtn.hidden = YES;
+                cell.orderSuccessBtn.hidden = YES;
+                cell.commentOrderBtn.hidden = NO;
+            }
+            else if (order.stateId == 6) {
+                cell.payOrderBtn.hidden = YES;
+                cell.closeOrderBtn.hidden = YES;
+                cell.orderSuccessBtn.hidden = YES;
+                cell.commentOrderBtn.hidden = NO;
+                [cell.commentOrderBtn setTitle:@"查看评价" forState:UIControlStateNormal];
             }
             else
             {
                 cell.payOrderBtn.hidden = YES;
                 cell.closeOrderBtn.hidden = YES;
+                cell.orderSuccessBtn.hidden = YES;
+                cell.commentOrderBtn.hidden = YES;
             }
             
             //货到付款也不需要支付按钮
@@ -239,8 +272,17 @@
                 cell.payOrderBtn.hidden = YES;
             }
             
+            cell.payOrderBtn.tag = indexRow;
+            [cell.payOrderBtn addTarget:self action:@selector(doPay:) forControlEvents:UIControlEventTouchUpInside];
+            
             cell.closeOrderBtn.tag = indexRow;
             [cell.closeOrderBtn addTarget:self action:@selector(doClose:) forControlEvents:UIControlEventTouchUpInside];
+            
+            cell.orderSuccessBtn.tag = indexRow;
+            [cell.orderSuccessBtn addTarget:self action:@selector(doSuccess:) forControlEvents:UIControlEventTouchUpInside];
+            
+            cell.commentOrderBtn.tag = indexRow;
+            [cell.commentOrderBtn addTarget:self action:@selector(doComment:) forControlEvents:UIControlEventTouchUpInside];
             
             return cell;
         }
@@ -264,6 +306,7 @@
     if (row >= [orders count]) {
         //启动刷新
         if (!isLoading) {
+            gNoRefresh = YES;
             [self performSelector:@selector(reload:)];
         }
     }
@@ -305,6 +348,7 @@
 - (void)egoRefreshTableHeaderDidTriggerToBottom
 {
     if (!isLoading) {
+        gNoRefresh = YES;
         [self performSelector:@selector(reload:)];
     }
 }
@@ -321,6 +365,7 @@
 {
     if ([UserModel Instance].isNetworkRunning) {
         isLoadOver = NO;
+        gNoRefresh = NO;
         [self reload:NO];
     }
 }
@@ -358,6 +403,7 @@
 //    [self.item3btn setBackgroundImage:nil forState:UIControlStateNormal];
     stateId = @"";
     isLoadOver = NO;
+    gNoRefresh = NO;
     [self reload:NO];
 }
 
@@ -370,6 +416,7 @@
 //    [self.item3btn setBackgroundImage:nil forState:UIControlStateNormal];
     stateId = @"0";
     isLoadOver = NO;
+    gNoRefresh = NO;
     [self reload:NO];
 }
 
@@ -382,6 +429,7 @@
 //    [self.item3btn setBackgroundImage:[UIImage imageNamed:@"activity_tab_bg"] forState:UIControlStateNormal];
     stateId = @"1,2,3";
     isLoadOver = NO;
+    gNoRefresh = NO;
     [self reload:NO];
 }
 
@@ -471,7 +519,7 @@
         //关闭交易
         NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
         [param setValue:order.orderId forKey:@"orderId"];
-        NSString *updateOrderCloseUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, updateOrderClose] params:param];
+        NSString *updateOrderCloseUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_updateOrderClose] params:param];
         [[AFOSCClient sharedClient]getPath:updateOrderCloseUrl parameters:Nil
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                        @try {
@@ -511,6 +559,65 @@
                                        }
                                    }];
     }
+}
+
+- (void)doSuccess:(UIButton *)sender
+{
+    //如果有网络连接
+    if ([UserModel Instance].isNetworkRunning) {
+        int row = sender.tag;
+        MyOrder *order = [orders objectAtIndex:sender.tag];
+        //交易成功
+        NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+        [param setValue:order.orderId forKey:@"orderId"];
+        NSString *updateOrderCloseUrl = [Tool serializeURL:[NSString stringWithFormat:@"%@%@", api_base_url, api_appUpdateOrderSuccess] params:param];
+        [[AFOSCClient sharedClient]getPath:updateOrderCloseUrl parameters:Nil
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       @try {
+                                           NSData *data = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                                           NSError *error;
+                                           NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                           
+                                           NSString *state = [[json objectForKey:@"header"] objectForKey:@"state"];
+                                           if ([state isEqualToString:@"0000"] == NO) {
+                                               UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"错误提示"
+                                                                                            message:[[json objectForKey:@"header"] objectForKey:@"msg"]
+                                                                                           delegate:nil
+                                                                                  cancelButtonTitle:@"确定"
+                                                                                  otherButtonTitles:nil];
+                                               [av show];
+                                               return;
+                                           }
+                                           else
+                                           {
+                                               [orders removeObjectAtIndex:row];
+                                               [self.tableView reloadData];
+                                           }
+                                       }
+                                       @catch (NSException *exception) {
+                                           [NdUncaughtExceptionHandler TakeException:exception];
+                                       }
+                                       @finally {
+                                           
+                                       }
+                                   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       if ([UserModel Instance].isNetworkRunning == NO) {
+                                           return;
+                                       }
+                                       if ([UserModel Instance].isNetworkRunning) {
+                                           [Tool ToastNotification:@"错误 网络无连接" andView:self.view andLoading:NO andIsBottom:NO];
+                                       }
+                                   }];
+    }
+}
+
+- (void)doComment:(UIButton *)sender
+{
+    int row = sender.tag;
+    MyOrder *order = [orders objectAtIndex:sender.tag];
+    OrderCommentView *commentView = [[OrderCommentView alloc] init];
+    commentView.order = order;
+    [self.navigationController pushViewController:commentView animated:YES];
 }
 
 @end
